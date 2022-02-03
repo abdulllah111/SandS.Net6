@@ -5,19 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SandS.View"
              mc:Ignorable="d" Width="728" Height="450"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+            xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:viewmodel="clr-namespace:SandS.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PickGroupForScheduleVM}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
             TextElement.FontSize="13"
             TextOptions.TextFormattingMode="Ideal"
             TextOptions.TextRenderingMode="Auto"
             Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" Loaded="PickGroupForScheduleViev_Loaded">
-
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding LoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
     <Grid>
-
+        <ProgressBar
+                    Visibility="{Binding Loading, Converter={StaticResource BooleanToVisibilityConverter}}"
+  Style="{StaticResource MaterialDesignCircularProgressBar}"
+  Value="35"
+  IsIndeterminate="True" Margin="170,79,174,187" RenderTransformOrigin="0.737,0.676" Grid.Column="1" Grid.Row="1" />
         <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
             <Grid>
+                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80*"/>
                     <RowDefinition Height="281*"/>
@@ -29,17 +41,25 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="DepartmentCombobox"
+                          SelectedItem="{Binding SelectedDepartment}"
             DisplayMemberPath="Name" SelectedValuePath="IdDepartment"
+            ItemsSource="{Binding Departments.Result}"
             Style="{StaticResource MaterialDesignOutlinedComboBox}"
             materialDesign:HintAssist.Hint="Выберите отделение"
-            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,9,10,0" Height="49" SelectionChanged="DepartmentCombobox_SelectionChanged"/>
+            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,9,10,0" Height="49">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="SelectionChanged" Command="{Binding DepartmentsSelectedChangedCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </ComboBox>
                 <ComboBox
             x:Name="GroupCombobox"
             DisplayMemberPath="Name" SelectedValuePath="IdGroup"
+                    ItemsSource="{Binding Groups}"
+                    IsEnabled="{Binding GroupsIsEndable}"
             Style="{StaticResource MaterialDesignOutlinedComboBox}"
             materialDesign:HintAssist.Hint="Выберите группу"
-            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,112.4,10,0" Height="49" IsEnabled="False" SelectionChanged="GroupCombobox_SelectionChanged"/>
-                <Button x:Name="ShowButton" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Показать" Grid.Column="1" Height="43" Margin="10,0,10,7.8" VerticalAlignment="Bottom" Grid.Row="1" Click="ShowButton_Click" IsEnabled="False" />
+            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,112.4,10,0" Height="49"/>
+                <Button x:Name="ShowButton" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Показать" Grid.Column="1" Height="43" Margin="10,0,10,7.8" VerticalAlignment="Bottom" Grid.Row="1"/>
             </Grid>
             <materialDesign:TransitionerSlide>
                 <materialDesign:TransitionerSlide.BackwardWipe>

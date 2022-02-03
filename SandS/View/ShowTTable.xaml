@@ -35,7 +35,7 @@
 
                 <DataGrid x:Name="MondayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара" Binding="{Binding Lesson.LessonNumber}"/>
+                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
