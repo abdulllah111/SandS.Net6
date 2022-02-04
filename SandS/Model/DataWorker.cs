@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using SandS.Model.helpClasses;
 using SandS.Model.MoreModel;
 
 namespace SandS.Model
@@ -13,13 +14,12 @@ namespace SandS.Model
     public class DataWorker
     {
         private static HttpClient client = new HttpClient();
-        public static async Task<Teacher> GetTeacher(int? id)
-        {
-            
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/teacher/{id}");
-            var data = await JsonSerializer.DeserializeAsync<Teacher>(await streamTask);
-            return data;
-        }
+
+        public static Task<ObservableCollection<Group>> GroupsByDepartment(int DepartmentId) =>
+            ApiData<ObservableCollection<Group>>.Get($"http://uksivttimetable.000webhostapp.com/api/department/{DepartmentId}/groups");
+
+        public static Task<Teacher> GetTeacher(int? id) => ApiData<Teacher>.Get($"https://uksivttimetable.000webhostapp.com/public/api/teacher/{id}");
+        
         public static async Task<Teacher> GetTeacher(string name)
         {
             
@@ -65,13 +65,7 @@ namespace SandS.Model
             return data;
         }
 
-        public static async Task<ObservableCollection<Group>> GetGroups()
-        {
-            
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/group");
-            var data = await JsonSerializer.DeserializeAsync<ObservableCollection<Group>>(await streamTask);
-            return data;
-        }
+        public static Task<ObservableCollection<Group>> GetGroups() => ApiData<ObservableCollection<Group>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/group");
 
         public async static Task<Group> GetGroup(string name)
         {
@@ -160,14 +154,8 @@ namespace SandS.Model
             return a.Where(x => x.Name == name).First();
         }
 
-
-        public static async Task<ObservableCollection<Department>> GetDepartments()
-        {
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/department");
-            var data = await JsonSerializer.DeserializeAsync<ObservableCollection<Department>>(await streamTask);
-            return data;
-        }
-
+        public static Task<ObservableCollection<Department>> GetDepartments() => ApiData<ObservableCollection<Department>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/department");
+        
         public static async Task<List<TTable>> GetTTables()
         {
             

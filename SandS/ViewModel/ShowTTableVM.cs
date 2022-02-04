@@ -1,4 +1,6 @@
 ﻿using DevExpress.Mvvm;
+using MaterialDesignThemes.Wpf;
+using MaterialDesignThemes.Wpf.Transitions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,8 +10,19 @@ using System.Threading.Tasks;
 
 namespace SandS.ViewModel
 {
-    public class ShowTTableVM : ViewModelBase
+    internal class ShowTTableVM : PickGroupForScheduleVM
     {
-        
+
+        public DelegateCommand BackCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    ShowTtableIsEnable = false;
+                    base.transitioner = 0;
+                });
+            }
+        }
     }
 }

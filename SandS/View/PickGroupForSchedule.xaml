@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SandS.View"
              mc:Ignorable="d" Width="728" Height="450"
-            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-            xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:viewmodel="clr-namespace:SandS.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PickGroupForScheduleVM}"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:viewmodel="clr-namespace:SandS.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PickGroupForScheduleVM}"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
             TextElement.FontSize="13"
@@ -27,9 +26,8 @@
   Style="{StaticResource MaterialDesignCircularProgressBar}"
   Value="35"
   IsIndeterminate="True" Margin="170,79,174,187" RenderTransformOrigin="0.737,0.676" Grid.Column="1" Grid.Row="1" />
-        <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
+        <materialDesign:Transitioner SelectedIndex="{Binding transitioner}"  AutoApplyTransitionOrigins="True">
             <Grid>
-                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80*"/>
                     <RowDefinition Height="281*"/>
@@ -54,20 +52,19 @@
                 <ComboBox
             x:Name="GroupCombobox"
             DisplayMemberPath="Name" SelectedValuePath="IdGroup"
-                    ItemsSource="{Binding Groups}"
+                    ItemsSource="{Binding Groups.Result}"
                     IsEnabled="{Binding GroupsIsEndable}"
+                    SelectedItem="{Binding SelectedGroup}"
             Style="{StaticResource MaterialDesignOutlinedComboBox}"
             materialDesign:HintAssist.Hint="Выберите группу"
-            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,112.4,10,0" Height="49"/>
-                <Button x:Name="ShowButton" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Показать" Grid.Column="1" Height="43" Margin="10,0,10,7.8" VerticalAlignment="Bottom" Grid.Row="1"/>
+            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,112.4,10,0" Height="49">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="SelectionChanged" Command="{Binding GroupsSelectedChangedCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </ComboBox>
+                <Button IsEnabled="{Binding ShowTtableButtonIsEnable}" x:Name="ShowButton" Command="{Binding ShowTtableCommand}" Content="Показать" Grid.Column="1" Height="43" Margin="10,0,10,7.8" VerticalAlignment="Bottom" Grid.Row="1"/>
             </Grid>
-            <materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:CircleWipe/>
-                </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                    <materialDesign:SlideWipe Direction="Right"/>
-                </materialDesign:TransitionerSlide.ForwardWipe>
+            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
                 <local:ShowTTable x:Name="showttable" Width="Auto" Height="Auto"/>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>

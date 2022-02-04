@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SandS.View"
              mc:Ignorable="d" Width="728" Height="450"
-              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodel="clr-namespace:SandS.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ShowTTableVM}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
             TextElement.FontSize="13"
             TextOptions.TextFormattingMode="Ideal"
             TextOptions.TextRenderingMode="Auto"
             Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" IsEnabledChanged="ShowTTableUC_IsEnabledChanged">
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
 
         <TabControl  Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
@@ -20,10 +20,11 @@
                      TabStripPlacement="Top" Margin="0,0,0,-0.4" Grid.ColumnSpan="2">
 
             <materialDesign:NavigationRailAssist.FloatingContent>
+                
                 <Button x:Name="BackButton"
-                   Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                   Command="{Binding BackCommand}"
                     Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-                    Margin="8" Click="BackButton_Click">
+                    Margin="8">
                     <materialDesign:PackIcon
                         Kind="ArrowLeft"
                         Width="25"
@@ -32,7 +33,6 @@
                 </Button>
             </materialDesign:NavigationRailAssist.FloatingContent>
             <TabItem Header="Понедельник" Width="Auto" HeaderStringFormat="" Height="71">
-
                 <DataGrid x:Name="MondayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" FontSize="13">
                     <DataGrid.Columns>
                         <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.Name}"/>

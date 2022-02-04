@@ -1,5 +1,7 @@
 ﻿using DevExpress.Mvvm;
+using MaterialDesignThemes.Wpf.Transitions;
 using SandS.Model;
+using SandS.Model.helpClasses;
 using SandS.Model.MoreModel;
 using System;
 using System.Collections.Generic;
@@ -13,16 +15,22 @@ namespace SandS.ViewModel
 {
     internal class PickGroupForScheduleVM : ViewModelBase
     {
-        private readonly ObservableCollection<Group> _groups;
 
-        public ObservableCollection<Group> Groups { get; set; }
+
         public Department SelectedDepartment { get; set; }
+        public Group SelectedGroup { get; set; }
         public bool GroupsIsEndable { get; set; }
+        public bool ShowTtableIsEnable { get; set; }
+        public bool ShowTtableButtonIsEnable { get; set; }
         public bool Loading { get; set; }
+        public TaskCompletion<ObservableCollection<Group>> Groups { get; set; }
         public TaskCompletion<ObservableCollection<Department>> Departments { get; set; }
+        public int transitioner { get; set; }
         public PickGroupForScheduleVM()
         {
-            _groups = new TaskCompletion<ObservableCollection<Group>>(DataWorker.GetGroups()).Result;
+            GroupsIsEndable = false;
+            ShowTtableButtonIsEnable = false;
+            transitioner= 0;
         }
         public DelegateCommand LoadedCommand
         {
@@ -30,7 +38,6 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {;
-                    GroupsIsEndable = false;
                     Departments = new TaskCompletion<ObservableCollection<Department>>(DataWorker.GetDepartments());
                     Loading = false;
                 });
@@ -44,16 +51,44 @@ namespace SandS.ViewModel
                 {
                     if (SelectedDepartment != null)
                     {
-                        Groups = new ObservableCollection<Group>(_groups.Where(x => x.IdDepartment == SelectedDepartment.IdDepartment).ToList());
+                        Groups = new TaskCompletion<ObservableCollection<Group>>(DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment));
                         GroupsIsEndable = true;
                     }
                     else
                     {
                         GroupsIsEndable = false;
+                        ShowTtableButtonIsEnable = false;
                     }
                 });
             }
         }
-
+        public DelegateCommand GroupsSelectedChangedCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    if(SelectedGroup != null)
+                    {
+                        ShowTtableButtonIsEnable = true;
+                    }
+                    else
+                    {
+                        ShowTtableButtonIsEnable = false;
+                    }
+                });
+            }
+        }
+        public DelegateCommand ShowTtableCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    ShowTtableIsEnable = true;
+                    transitioner = 1;
+                });
+            }
+        }
     }
 }

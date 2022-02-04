@@ -32,10 +32,10 @@ namespace SandS.View
         //{
         //    if (GroupCombobox.SelectedItem != null)
         //    {
-        //        /*Windoww.Visibility = Visibility.Hidden;
-        //        ScheduleForThisWeek a = new ScheduleForThisWeek((int)GroupCombobox.SelectedValue);
-        //        a.ShowDialog();
-        //        Windoww.Visibility = Visibility.Visible;*/
+        /*Windoww.Visibility = Visibility.Hidden;
+        ScheduleForThisWeek a = new ScheduleForThisWeek((int)GroupCombobox.SelectedValue);
+        a.ShowDialog();
+        Windoww.Visibility = Visibility.Visible;*/
         //    }
         //}
 

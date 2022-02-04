@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using SandS.Model;
 using SandS.Model.helpClasses;
 using SandS.Model.MoreModel;
+using SandS.ViewModel;
 
 namespace SandS.View
 {
@@ -17,77 +18,78 @@ namespace SandS.View
     /// </summary>
     public partial class ShowTTable : UserControl
     {
-        private BindingList<TTable> FridayList;
-        private BindingList<TTable> MondayList;
-        private BindingList<TTable> SaturdayList;
-        private BindingList<TTable> ThursdayList;
-        private BindingList<TTable> TuesdayList;
-        private BindingList<TTable> WednesdayList;
+        //private BindingList<TTable> FridayList;
+        //private BindingList<TTable> MondayList;
+        //private BindingList<TTable> SaturdayList;
+        //private BindingList<TTable> ThursdayList;
+        //private BindingList<TTable> TuesdayList;
+        //private BindingList<TTable> WednesdayList;
 
         public ShowTTable()
         {
             InitializeComponent();
+            DataContext = new ShowTTableVM();
         }
 
         public int IdGroup { get; set; }
 
-        private void AddTTableToList(BindingList<TTable> list, TTable ttable)
-        {
-            list.Add(ttable);
-        }
+        //private void AddTTableToList(BindingList<TTable> list, TTable ttable)
+        //{
+        //    list.Add(ttable);
+        //}
 
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            IsEnabled = false;
-        }
+        //private void BackButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    IsEnabled = false;
+        //}
 
-        private async void ShowTTableUC_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (IsEnabled == false) return;
-            MondayList = new BindingList<TTable>();
-            TuesdayList = new BindingList<TTable>();
-            WednesdayList = new BindingList<TTable>();
-            ThursdayList = new BindingList<TTable>();
-            FridayList = new BindingList<TTable>();
-            SaturdayList = new BindingList<TTable>();
-            var client = new HttpClient();
-            var streamTask = await client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/ttable/getforgroup/{IdGroup}");
-            var data = await JsonSerializer.DeserializeAsync<List<DgtAndTtables>>(streamTask);
-            foreach (var item in data)
-            {
-                foreach (var item2 in item.Ttables)
-                {
-                    switch (item2.IdWeekDay)
-                    {
-                        case 1:
-                            AddTTableToList(MondayList, item2);
-                            break;
-                        case 2:
-                            AddTTableToList(TuesdayList, item2);
-                            break;
-                        case 3:
-                            AddTTableToList(WednesdayList, item2);
-                            break;
-                        case 4:
-                            AddTTableToList(ThursdayList, item2);
-                            break;
-                        case 5:
-                            AddTTableToList(FridayList, item2);
-                            break;
-                        case 6:
-                            AddTTableToList(SaturdayList, item2);
-                            break;
-                    }
-                }
-            }
+        //private async void ShowTTableUC_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        //{
+        //    if (IsEnabled == false) return;
+        //    MondayList = new BindingList<TTable>();
+        //    TuesdayList = new BindingList<TTable>();
+        //    WednesdayList = new BindingList<TTable>();
+        //    ThursdayList = new BindingList<TTable>();
+        //    FridayList = new BindingList<TTable>();
+        //    SaturdayList = new BindingList<TTable>();
+        //    var client = new HttpClient();
+        //    var streamTask = await client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/ttable/getforgroup/{IdGroup}");
+        //    var data = await JsonSerializer.DeserializeAsync<List<DgtAndTtables>>(streamTask);
+        //    foreach (var item in data)
+        //    {
+        //        foreach (var item2 in item.Ttables)
+        //        {
+        //            switch (item2.IdWeekDay)
+        //            {
+        //                case 1:
+        //                    AddTTableToList(MondayList, item2);
+        //                    break;
+        //                case 2:
+        //                    AddTTableToList(TuesdayList, item2);
+        //                    break;
+        //                case 3:
+        //                    AddTTableToList(WednesdayList, item2);
+        //                    break;
+        //                case 4:
+        //                    AddTTableToList(ThursdayList, item2);
+        //                    break;
+        //                case 5:
+        //                    AddTTableToList(FridayList, item2);
+        //                    break;
+        //                case 6:
+        //                    AddTTableToList(SaturdayList, item2);
+        //                    break;
+        //            }
+        //        }
+        //    }
 
-            MondayDataGrid.ItemsSource = MondayList;
-            TuesdayDataGrid.ItemsSource = TuesdayList;
-            WednesdayDataGrid.ItemsSource = WednesdayList;
-            ThursdayDataGrid.ItemsSource = ThursdayList;
-            FridayDataGrid.ItemsSource = FridayList;
-            SaturdayDataGrid.ItemsSource = SaturdayList;
-        }
+        //    MondayDataGrid.ItemsSource = MondayList;
+        //    TuesdayDataGrid.ItemsSource = TuesdayList;
+        //    WednesdayDataGrid.ItemsSource = WednesdayList;
+        //    ThursdayDataGrid.ItemsSource = ThursdayList;
+        //    FridayDataGrid.ItemsSource = FridayList;
+        //    SaturdayDataGrid.ItemsSource = SaturdayList;
+        //}
     }
 }
