@@ -12,15 +12,28 @@ namespace SandS.ViewModel
 {
     internal class ShowTTableVM : PickGroupForScheduleVM
     {
+        public string s { get; set; }
+        public ShowTTableVM()
+        {
 
+        }
         public DelegateCommand BackCommand
         {
             get
             {
                 return new DelegateCommand(() =>
                 {
-                    ShowTtableIsEnable = false;
                     base.transitioner = 0;
+                });
+            }
+        }
+        public DelegateCommand LoadTtable
+        {
+            get
+            {
+                return new DelegateCommand(()=>
+                {
+                    s = "sdsadsa";
                 });
             }
         }

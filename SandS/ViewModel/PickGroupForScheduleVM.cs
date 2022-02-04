@@ -85,8 +85,10 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    ShowTtableIsEnable = true;
-                    transitioner = 1;
+                    if (ShowTtableButtonIsEnable != false)
+                    {
+                        transitioner = 1;
+                    }
                 });
             }
         }

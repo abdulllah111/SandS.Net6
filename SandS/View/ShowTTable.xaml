@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SandS.View"
              mc:Ignorable="d" Width="728" Height="450"
-              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodel="clr-namespace:SandS.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ShowTTableVM}"
+              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodel="clr-namespace:SandS.ViewModel" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" d:DataContext="{d:DesignInstance Type=viewmodel:ShowTTableVM}"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
             TextElement.FontSize="13"
@@ -13,6 +13,9 @@
             TextOptions.TextRenderingMode="Auto"
             Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="IsEnabledChanged"  Command="{Binding LoadTtable}"/>
+    </dxmvvm:Interaction.Behaviors>
     <Grid>
 
         <TabControl  Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
@@ -22,9 +25,9 @@
             <materialDesign:NavigationRailAssist.FloatingContent>
                 
                 <Button x:Name="BackButton"
-                   Command="{Binding BackCommand}"
+                   Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
                     Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-                    Margin="8">
+                    Margin="8" Cursor="Hand">
                     <materialDesign:PackIcon
                         Kind="ArrowLeft"
                         Width="25"
