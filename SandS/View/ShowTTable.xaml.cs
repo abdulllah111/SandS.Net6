@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using MySql.Data.MySqlClient;
 using SandS.Model;
-using SandS.Model.helpClasses;
 using SandS.Model.MoreModel;
 using SandS.ViewModel;
 
@@ -25,10 +24,10 @@ namespace SandS.View
         //private BindingList<TTable> TuesdayList;
         //private BindingList<TTable> WednesdayList;
 
-        public ShowTTable()
+        internal ShowTTable(ShowTTableVM vm)
         {
             InitializeComponent();
-            DataContext = new ShowTTableVM();
+            DataContext = vm;
         }
 
         public int IdGroup { get; set; }

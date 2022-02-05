@@ -66,14 +66,13 @@
                 </ComboBox>
                 <Button IsEnabled="{Binding ShowTtableButtonIsEnable}" x:Name="ShowButton" Command="{Binding ShowTtableCommand}" Content="Показать" Grid.Column="1" Height="43" Margin="10,0,10,7.8" VerticalAlignment="Bottom" Grid.Row="1"/>
             </Grid>
-            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+            <materialDesign:TransitionerSlide Content="{Binding ShowttableUk}" OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
                 <materialDesign:TransitionerSlide.BackwardWipe>
                     <materialDesign:CircleWipe/>
                 </materialDesign:TransitionerSlide.BackwardWipe>
                 <materialDesign:TransitionerSlide.ForwardWipe>
                     <materialDesign:CircleWipe/>
                 </materialDesign:TransitionerSlide.ForwardWipe>
-                <local:ShowTTable Width="Auto" Height="Auto"/>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
     </Grid>

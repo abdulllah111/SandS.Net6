@@ -1,8 +1,8 @@
 ﻿using DevExpress.Mvvm;
 using MaterialDesignThemes.Wpf.Transitions;
 using SandS.Model;
-using SandS.Model.helpClasses;
 using SandS.Model.MoreModel;
+using SandS.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,22 +10,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SandS.ViewModel
 {
     internal class PickGroupForScheduleVM : ViewModelBase
     {
-
-
         public Department SelectedDepartment { get; set; }
         public Group SelectedGroup { get; set; }
         public bool GroupsIsEndable { get; set; }
-        public bool ShowTtableIsEnable { get; set; }
+        public bool ShowTtableIsEnable { get; set; }    
         public bool ShowTtableButtonIsEnable { get; set; }
         public bool Loading { get; set; }
         public TaskCompletion<ObservableCollection<Group>> Groups { get; set; }
         public TaskCompletion<ObservableCollection<Department>> Departments { get; set; }
         public int transitioner { get; set; }
+        public UserControl ShowttableUk { get; set; } 
         public PickGroupForScheduleVM()
         {
             GroupsIsEndable = false;
@@ -71,6 +71,7 @@ namespace SandS.ViewModel
                     if(SelectedGroup != null)
                     {
                         ShowTtableButtonIsEnable = true;
+                        
                     }
                     else
                     {
@@ -87,6 +88,8 @@ namespace SandS.ViewModel
                 {
                     if (ShowTtableButtonIsEnable != false)
                     {
+                        var vm = new ShowTTableVM(SelectedGroup);
+                        ShowttableUk = new ShowTTable(vm);
                         transitioner = 1;
                     }
                 });

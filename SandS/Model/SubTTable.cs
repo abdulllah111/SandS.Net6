@@ -15,7 +15,7 @@ namespace SandS.Model
         [JsonPropertyName("idoffice")]
         public int? IdOffice { get; set; }
         public string WeekDayName { get; set; }
-        public string LessonName { get; set; }
+        public int LessonName { get; set; }
         public string OfficeName { get; set; }
         [JsonPropertyName("iddisciplinegroupteacher")]
         public int IdDisciplineGroupTeacher { get; set; }

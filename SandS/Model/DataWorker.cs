@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using SandS.Model.helpClasses;
 using SandS.Model.MoreModel;
 
 namespace SandS.Model
@@ -15,6 +14,9 @@ namespace SandS.Model
     {
         private static HttpClient client = new HttpClient();
 
+        public static Task<ObservableCollection<TTable>> GetTtableByGroupAndWeekDay(int groupid, int weekday) =>
+            ApiData<ObservableCollection<TTable>>.Get($"http://uksivttimetable.000webhostapp.com/api/ttable/getforgroup/{groupid}/{weekday}");
+        
         public static Task<ObservableCollection<Group>> GroupsByDepartment(int DepartmentId) =>
             ApiData<ObservableCollection<Group>>.Get($"http://uksivttimetable.000webhostapp.com/api/department/{DepartmentId}/groups");
 
@@ -75,13 +77,8 @@ namespace SandS.Model
             return data;
         }
 
-        public static async Task<WeekDay> GetWeekDay(int id)
-        {
-            
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/weekday/{id}");
-            var data = await JsonSerializer.DeserializeAsync<WeekDay>(await streamTask);
-            return data;
-        }
+        public static Task<WeekDay> GetWeekDay(int id) => ApiData<WeekDay>.Get($"https://uksivttimetable.000webhostapp.com/public/api/weekday/{id}");
+        
         public static async Task<List<WeekDay>> GetWeekDays()
         {
             
@@ -96,20 +93,13 @@ namespace SandS.Model
             return a.Where(x => x.Name == name).First();
         }
 
-        public static async Task<Lesson> GetLesson(int id)
-        {
-            
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/lesson/{id}");
-            var data = await JsonSerializer.DeserializeAsync<Lesson>(await streamTask);
-            var a = data;
-            return data;
-        }
-
-        public static async Task<Lesson> GetLesson(string number)
-        {
-            var a = await GetLessons();
-            return a.Where(x => x.LessonNumber == number).First();
-        }
+        public static Task<Lesson> GetLesson(int id) => ApiData<Lesson>.Get($"https://uksivttimetable.000webhostapp.com/public/api/lesson/{id}");
+        
+        //public static async Task<Lesson> GetLesson(int number)
+        //{
+        //    var a = await GetLessons();
+        //    return a.Where(x => x.LessonNumber == number).First();
+        //}
         public static async Task<List<Lesson>> GetLessons()
         {
             
@@ -119,13 +109,8 @@ namespace SandS.Model
         }
 
 
-        public static async Task<Office> GetOffice(int? id)
-        {
-            
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/office/{id}");
-            var data = await JsonSerializer.DeserializeAsync<Office>(await streamTask);
-            return data;
-        }
+        public static Task<Office> GetOffice(int? id) => ApiData<Office>.Get($"https://uksivttimetable.000webhostapp.com/public/api/office/{id}");
+        
 
         public static async Task<Office> GetOffice(string number)
         {
@@ -180,14 +165,8 @@ namespace SandS.Model
             return data;
         }
 
-        public async static Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher(int id)
-        {
-            
-            var streamTask = client.GetStreamAsync($"https://uksivttimetable.000webhostapp.com/public/api/dgt/{id}");
-            var data = await JsonSerializer.DeserializeAsync<DisciplineGroupTeacher>(await streamTask);
-            return data;
-        }
-
+        public static Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher(int id) => ApiData<DisciplineGroupTeacher>.Get($"https://uksivttimetable.000webhostapp.com/public/api/dgt/{id}");
+   
         public async static Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher(DisciplineGroupTeacher disciplineGroupTeacher)
         {
             var a = await GetDisciplineGroupTeachers();

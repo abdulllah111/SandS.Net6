@@ -13,11 +13,13 @@
             TextOptions.TextRenderingMode="Auto"
             Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="IsEnabledChanged"  Command="{Binding LoadTtable}"/>
+    
+    
+    <dxmvvm:Interaction.Behaviors >
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding LoadTtable}" ProcessEventsFromDisabledEventOwner="False"/>
+
     </dxmvvm:Interaction.Behaviors>
     <Grid>
-
         <TabControl  Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
                      materialDesign:ColorZoneAssist.Mode="PrimaryMid" 
                      TabStripPlacement="Top" Margin="0,0,0,-0.4" Grid.ColumnSpan="2">
@@ -36,9 +38,9 @@
                 </Button>
             </materialDesign:NavigationRailAssist.FloatingContent>
             <TabItem Header="Понедельник" Width="Auto" HeaderStringFormat="" Height="71">
-                <DataGrid x:Name="MondayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" FontSize="13">
+                <DataGrid x:Name="MondayDataGrid" ItemsSource="{Binding MondayList.Result, IsAsync=True}"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.Name}"/>
+                        <materialDesign:DataGridTextColumn SortMemberPath="" Header="Пара"  Binding="{Binding Lesson.LessonNumber}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
@@ -46,9 +48,9 @@
                 </DataGrid>
             </TabItem>
             <TabItem Height="Auto" Header="Вторник" Width="Auto">
-                <DataGrid x:Name="TuesdayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
+                <DataGrid x:Name="TuesdayDataGrid" ItemsSource="{Binding TuesdayList.Result}" AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара" Binding="{Binding Lesson.LessonNumber}"/>
+                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.LessonNumber}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
@@ -56,9 +58,9 @@
                 </DataGrid>
             </TabItem>
             <TabItem Height="71" Header="Среда" Width="Auto">
-                <DataGrid x:Name="WednesdayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
+                <DataGrid x:Name="WednesdayDataGrid" ItemsSource="{Binding WednesdayList.Result}" AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара" Binding="{Binding Lesson.LessonNumber}"/>
+                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.LessonNumber}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
@@ -66,9 +68,9 @@
                 </DataGrid>
             </TabItem>
             <TabItem Height="71" Header="Четверг" Width="Auto">
-                <DataGrid x:Name="ThursdayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
+                <DataGrid x:Name="ThursdayDataGrid" ItemsSource="{Binding ThursdayList.Result}"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара" Binding="{Binding Lesson.LessonNumber}"/>
+                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.LessonNumber}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
@@ -76,9 +78,9 @@
                 </DataGrid>
             </TabItem>
             <TabItem Height="71" Header="Пятниица" Width="Auto">
-                <DataGrid x:Name="FridayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
+                <DataGrid x:Name="FridayDataGrid" ItemsSource="{Binding FridayList.Result}" AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара" Binding="{Binding Lesson.LessonNumber}"/>
+                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.LessonNumber}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
@@ -86,9 +88,9 @@
                 </DataGrid>
             </TabItem>
             <TabItem Height="71" Header="Суббота" Width="Auto">
-                <DataGrid x:Name="SaturdayDataGrid"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
+                <DataGrid x:Name="SaturdayDataGrid" ItemsSource="{Binding SaturdayList.Result}"  AutoGenerateColumns="False" CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" Margin="0,0,0,-0.2" FontSize="13">
                     <DataGrid.Columns>
-                        <materialDesign:DataGridTextColumn Header="Пара" Binding="{Binding Lesson.LessonNumber}"/>
+                        <materialDesign:DataGridTextColumn Header="Пара"  Binding="{Binding Lesson.LessonNumber}"/>
                         <materialDesign:DataGridTextColumn Header="Предмет" Binding="{Binding GetDisciplineGroupTeacher.Discipline.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Преподаватель"  Binding="{Binding GetDisciplineGroupTeacher.Teacher.Name}"/>
                         <materialDesign:DataGridTextColumn Header="Кабинет"  Binding="{Binding Office.OfficeNumber}"/>
