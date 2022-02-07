@@ -67,7 +67,8 @@ namespace SandS.Model
             return data;
         }
 
-        public static Task<ObservableCollection<Group>> GetGroups() => ApiData<ObservableCollection<Group>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/group");
+        public static Task<ObservableCollection<Group>> GetGroups() => 
+            ApiData<ObservableCollection<Group>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/group");
 
         public async static Task<Group> GetGroup(string name)
         {

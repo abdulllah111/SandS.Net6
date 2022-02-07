@@ -12,18 +12,7 @@ namespace SandS
         public Login()
         {
             InitializeComponent();
-            var service = new ServiceController("MySQL80");
-            if (service.Status != ServiceControllerStatus.Stopped)
-            {
-                service.Stop();
-                service.WaitForStatus(ServiceControllerStatus.Stopped);
-            }
-
-            if (service.Status != ServiceControllerStatus.Running)
-            {
-                service.Start();
-                service.WaitForStatus(ServiceControllerStatus.Running);
-            }
+            
         }
 
         private void LoginStudentButton_Click(object sender, RoutedEventArgs e)

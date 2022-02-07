@@ -20,7 +20,6 @@
     
     <dxmvvm:Interaction.Behaviors >
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding LoadedCommand}" ProcessEventsFromDisabledEventOwner="False"/>
-        
     </dxmvvm:Interaction.Behaviors>
     <Grid>
         <ProgressBar
