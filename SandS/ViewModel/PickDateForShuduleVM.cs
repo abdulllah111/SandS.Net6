@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using SandS.Model;
-using SandS.Model.MoreModel;
+using SandS.Services;
+using SandS.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,8 +21,11 @@ namespace SandS.ViewModel
         public bool GroupsIsEndable { get; set; }
         public bool ShowButtonisEnable { get; set; }
         public int transitioner { get; set; }
+        public ShowSubTTable ShowSubTtableUk { get; set; }
         public PickDateForShuduleVM()
         {
+            Date = DateTime.Today;
+            transitioner = 0;
             GroupsIsEndable = false;
         }
         public DelegateCommand LoadedCommand
@@ -30,7 +34,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    Departments = new TaskCompletion<ObservableCollection<Department>>(DataWorker.GetDepartments());
+                    Departments = DataWorker.GetDepartments();
                     GroupsIsEndable = false;
                 });
             }
@@ -44,7 +48,7 @@ namespace SandS.ViewModel
                     if (SelectedDepartment != null)
                     {
                         GroupsIsEndable = true;
-                        Groups = new TaskCompletion<ObservableCollection<Group>>(DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment));
+                        Groups = DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment);
                     }
                     else
                     {
@@ -59,6 +63,9 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
+                    var date = Date.DateStr();
+                    var vm = new ShowSubTTableVM(SelectedGroup, Date);
+                    ShowSubTtableUk = new ShowSubTTable(vm);
                     transitioner = 1;
                 });
             }

@@ -1,7 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using MaterialDesignThemes.Wpf.Transitions;
 using SandS.Model;
-using SandS.Model.MoreModel;
+using SandS.Services;
 using SandS.View;
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {;
-                    Departments = new TaskCompletion<ObservableCollection<Department>>(DataWorker.GetDepartments());
+                    Departments = DataWorker.GetDepartments();
                     Loading = false;
                 });
             }
@@ -51,7 +51,7 @@ namespace SandS.ViewModel
                 {
                     if (SelectedDepartment != null)
                     {
-                        Groups = new TaskCompletion<ObservableCollection<Group>>(DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment));
+                        Groups = DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment);
                         GroupsIsEndable = true;
                     }
                     else

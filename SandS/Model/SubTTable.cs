@@ -20,12 +20,18 @@ namespace SandS.Model
         [JsonPropertyName("iddisciplinegroupteacher")]
         public int IdDisciplineGroupTeacher { get; set; }
         [JsonPropertyName("date")]
-        public DateTime Date { get; set; }
-        public DisciplineGroupTeacher DisciplineGroupTeacher { get; set; }
-
-        public async Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher() => (IdDisciplineGroupTeacher != 0) ? await DataWorker.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher) : await DataWorker.GetDisciplineGroupTeacher(DisciplineGroupTeacher);
-        public async Task<WeekDay> WeekDay() => (IdWeekDay != 0) ? await DataWorker.GetWeekDay(IdWeekDay) : await DataWorker.GetWeekDay(WeekDayName);
-        public async Task<Lesson> Lesson() => (IdLesson != 0) ? await DataWorker.GetLesson(IdLesson) : await DataWorker.GetLesson(LessonName);
-        public async Task<Office> Office() => (IdOffice != 0) ? await DataWorker.GetOffice(IdOffice) : await DataWorker.GetOffice(OfficeName);
+        public string Date { get; set; }
+        [JsonPropertyName("weekday")]
+        public WeekDay WeekDay { get; set; }
+        [JsonPropertyName("lesson")]
+        public Lesson Lesson { get; set; }
+        [JsonPropertyName("office")]
+        public Office Office { get; set; }
+        [JsonPropertyName("discipline_group_teacher")]
+        public DisciplineGroupTeacher GetDisciplineGroupTeacher { get; set; }
+        //public async Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher() => (IdDisciplineGroupTeacher != 0) ? await DataWorker.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher) : await DataWorker.GetDisciplineGroupTeacher(DisciplineGroupTeacher);
+        //public async Task<WeekDay> WeekDay() => (IdWeekDay != 0) ? await DataWorker.GetWeekDay(IdWeekDay) : await DataWorker.GetWeekDay(WeekDayName);
+        //public async Task<Lesson> Lesson() => (IdLesson != 0) ? await DataWorker.GetLesson(IdLesson) : await DataWorker.GetLesson(LessonName);
+        //public async Task<Office> Office() => (IdOffice != 0) ? await DataWorker.GetOffice(IdOffice) : await DataWorker.GetOffice(OfficeName);
     }
 }

@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MySql.Data.MySqlClient;
 using SandS.Model;
-using SandS.Model.MoreModel;
+using SandS.Services;
 using SandS.ViewModel;
 
 namespace SandS.View

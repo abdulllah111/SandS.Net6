@@ -63,14 +63,13 @@
                     </dxmvvm:Interaction.Behaviors>
                 </ComboBox>
             </Grid>
-            <materialDesign:TransitionerSlide>
+            <materialDesign:TransitionerSlide Content="{Binding ShowSubTtableUk}">
                 <materialDesign:TransitionerSlide.BackwardWipe>
                     <materialDesign:CircleWipe/>
                 </materialDesign:TransitionerSlide.BackwardWipe>
                 <materialDesign:TransitionerSlide.ForwardWipe>
                     <materialDesign:SlideWipe Direction="Right"/>
                 </materialDesign:TransitionerSlide.ForwardWipe>
-                <local:ShowSubTTable x:Name="showsubttable" Width="Auto" Height="Auto"/>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
     </Grid>

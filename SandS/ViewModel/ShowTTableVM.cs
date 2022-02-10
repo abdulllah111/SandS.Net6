@@ -2,7 +2,7 @@
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
 using SandS.Model;
-using SandS.Model.MoreModel;
+using SandS.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,12 +35,12 @@ namespace SandS.ViewModel
                 {
                     if (SelectedGroup != null)
                     {
-                        MondayList = new TaskCompletion<ObservableCollection<TTable>>(DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 1));
-                        TuesdayList = new TaskCompletion<ObservableCollection<TTable>>(DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 2));
-                        WednesdayList = new TaskCompletion<ObservableCollection<TTable>>(DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 3));
-                        ThursdayList = new TaskCompletion<ObservableCollection<TTable>>(DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 4));
-                        FridayList = new TaskCompletion<ObservableCollection<TTable>>(DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 5));
-                        SaturdayList = new TaskCompletion<ObservableCollection<TTable>>(DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 6));
+                        MondayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 1);
+                        TuesdayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 2);
+                        WednesdayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 3);
+                        ThursdayList =DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 4);
+                        FridayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 5);
+                        SaturdayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 6);
                      
                     }
                 });
