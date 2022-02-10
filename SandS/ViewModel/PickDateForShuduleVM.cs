@@ -63,8 +63,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    var date = Date.DateStr();
-                    var vm = new ShowSubTTableVM(SelectedGroup, Date);
+                    var vm = new ShowSubTTableVM(DataWorker.GetSubTTableByGroupAndDate(SelectedGroup.IdGroup, Date.DateStr()));
                     ShowSubTtableUk = new ShowSubTTable(vm);
                     transitioner = 1;
                 });

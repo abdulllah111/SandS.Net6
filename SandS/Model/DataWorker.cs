@@ -12,8 +12,8 @@ namespace SandS.Model
 {
     public class DataWorker
     {
-        public static TaskCompletion<SubTTable> GetSubTTableByGroupAndDate(int groupid, string date) =>
-            ApiData<SubTTable>.Get($"http://uksivttimetable.000webhostapp.com/api/subttable/getforgroupanddate/{groupid}/{date}");
+        public static TaskCompletion<SubTTable[]> GetSubTTableByGroupAndDate(int groupid, string date) =>
+            ApiData<SubTTable[]>.Get($"http://uksivttimetable.000webhostapp.com/api/subttable/getforgroupanddate/{groupid}/{date}");
 
         public static TaskCompletion<ObservableCollection<TTable>> GetTtableByGroupAndWeekDay(int groupid, int weekday) =>
             ApiData<ObservableCollection<TTable>>.Get($"http://uksivttimetable.000webhostapp.com/api/ttable/getforgroup/{groupid}/{weekday}");

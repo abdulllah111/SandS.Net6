@@ -11,10 +11,10 @@ namespace SandS.ViewModel
 {
     public class ShowSubTTableVM : ViewModelBase
     {
-        public TaskCompletion<SubTTable> SubTtable { get; set; }
-        public ShowSubTTableVM(Group selectedgroup, DateTime date)
+        public TaskCompletion<SubTTable[]> SubTtable { get; set; }
+        public ShowSubTTableVM(TaskCompletion<SubTTable[]> subttable)
         {
-            SubTtable = DataWorker.GetSubTTableByGroupAndDate(selectedgroup.IdGroup, date.DateStr());
+            SubTtable = subttable;
         }
         public DelegateCommand LoadSubTtable
         {
