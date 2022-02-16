@@ -16,16 +16,5 @@ namespace SandS.ViewModel
         {
             SubTtable = subttable;
         }
-        public DelegateCommand LoadSubTtable
-        {
-            get
-            {
-                return new DelegateCommand(() =>
-                {
-                   
-
-                });
-            }
-        }
     }
 }

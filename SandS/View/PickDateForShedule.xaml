@@ -1,74 +1,116 @@
-﻿<UserControl x:Name="PickDateForShedule1" x:Class="SandS.View.PickDateForShedule"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SandS.View"
-             d:DesignHeight="450" d:DesignWidth="800"
-             mc:Ignorable="d" Width="728" Height="450"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodel="clr-namespace:SandS.ViewModel" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" d:DataContext="{d:DesignInstance Type=viewmodel:PickDateForShuduleVM}"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-            TextElement.FontWeight="Regular"
-            TextElement.FontSize="13"
-            TextOptions.TextFormattingMode="Ideal"
-            TextOptions.TextRenderingMode="Auto"
-            Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
-    <dxmvvm:Interaction.Behaviors >
-        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding LoadedCommand}" ProcessEventsFromDisabledEventOwner="False"/>
+﻿<UserControl
+    x:Class="SandS.View.PickDateForShedule"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:local="clr-namespace:SandS.View"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:SandS.ViewModel"
+    x:Name="PickDateForShedule1"
+    Width="728"
+    Height="450"
+    d:DataContext="{d:DesignInstance Type=viewmodel:PickDateForShuduleVM}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand
+            Command="{Binding LoadedCommand}"
+            EventName="Loaded"
+            ProcessEventsFromDisabledEventOwner="False" />
     </dxmvvm:Interaction.Behaviors>
     <Grid>
-        <materialDesign:Transitioner SelectedIndex="{Binding transitioner}" AutoApplyTransitionOrigins="True">
+        <materialDesign:Transitioner AutoApplyTransitionOrigins="True" SelectedIndex="{Binding transitioner}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <DatePicker x:Name="DateBox" SelectedDate="{Binding Date}"  materialDesign:HintAssist.Hint="Выберите дату"  Style="{StaticResource MaterialDesignOutlinedDatePicker}" Grid.Column="1" Margin="9.6,10.2,10.4,0" VerticalAlignment="Top" Height="49" Grid.Row="1"/>
-                <Button x:Name="ShowButton" 
-                        IsEnabled="{Binding ShowButtonisEnable}"
-                        Command="{Binding ShowSubTtableCommand}" 
-            Content="Показать" Grid.Column="1" Height="43" Margin="9.6,0,10.4,8" VerticalAlignment="Bottom" Grid.Row="1"/>
-                <ComboBox x:Name="DepartmentCombobox"
-            DisplayMemberPath="Name" SelectedValuePath="IdDepartment"
-                          SelectedItem="{Binding SelectedDepartment}"
-                          ItemsSource="{Binding Departments.Result}"
-            Style="{StaticResource MaterialDesignOutlinedComboBox}"
-            materialDesign:HintAssist.Hint="Выберите отделение"
-            materialDesign:TextFieldAssist.HasClearButton="True" 
-                          Grid.Column="1" VerticalAlignment="Top" 
-                          Margin="9.6,64.6,10.4,0" Height="49" Grid.Row="1">
+                <DatePicker
+                    x:Name="DateBox"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Height="49"
+                    Margin="9.6,10.2,10.4,0"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="Выберите дату"
+                    SelectedDate="{Binding Date}"
+                    Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                <Button
+                    x:Name="ShowButton"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Height="43"
+                    Margin="9.6,0,10.4,8"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding ShowSubTtableCommand}"
+                    Content="Показать"
+                    IsEnabled="{Binding ShowButtonisEnable}" />
+                <ComboBox
+                    x:Name="DepartmentCombobox"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Height="49"
+                    Margin="9.6,64.6,10.4,0"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="Выберите отделение"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding Departments.Result}"
+                    SelectedItem="{Binding SelectedDepartment}"
+                    SelectedValuePath="IdDepartment"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="SelectionChanged" Command="{Binding DepartmentsSelectedChangedCommand}" ProcessEventsFromDisabledEventOwner="False"/>
+                        <dxmvvm:EventToCommand
+                            Command="{Binding DepartmentsSelectedChangedCommand}"
+                            EventName="SelectionChanged"
+                            ProcessEventsFromDisabledEventOwner="False" />
                     </dxmvvm:Interaction.Behaviors>
                 </ComboBox>
                 <ComboBox
-            x:Name="GroupCombobox"
-                   ItemsSource="{Binding Groups.Result}"
+                    x:Name="GroupCombobox"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Height="49"
+                    Margin="9.6,118.6,10.4,0"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="Выберите группу"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    DisplayMemberPath="Name"
+                    IsEnabled="{Binding GroupsIsEndable}"
+                    ItemsSource="{Binding Groups.Result}"
                     SelectedItem="{Binding SelectedGroup}"
-                     IsEnabled="{Binding GroupsIsEndable}"
-            DisplayMemberPath="Name" SelectedValuePath="IdGroup"
-            Style="{StaticResource MaterialDesignOutlinedComboBox}"
-            materialDesign:HintAssist.Hint="Выберите группу"
-            materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="1"
-                    VerticalAlignment="Top" Grid.Row="1" Margin="9.6,118.6,10.4,0" Height="49">
+                    SelectedValuePath="IdGroup"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="SelectionChanged" Command="{Binding GroupsSelectedChangedCommand}" ProcessEventsFromDisabledEventOwner="False"/>
+                        <dxmvvm:EventToCommand
+                            Command="{Binding GroupsSelectedChangedCommand}"
+                            EventName="SelectionChanged"
+                            ProcessEventsFromDisabledEventOwner="False" />
                     </dxmvvm:Interaction.Behaviors>
                 </ComboBox>
             </Grid>
             <materialDesign:TransitionerSlide Content="{Binding ShowSubTtableUk}">
                 <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:CircleWipe/>
+                    <materialDesign:CircleWipe />
                 </materialDesign:TransitionerSlide.BackwardWipe>
                 <materialDesign:TransitionerSlide.ForwardWipe>
-                    <materialDesign:SlideWipe Direction="Right"/>
+                    <materialDesign:SlideWipe Direction="Right" />
                 </materialDesign:TransitionerSlide.ForwardWipe>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>

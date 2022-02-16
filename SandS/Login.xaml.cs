@@ -38,10 +38,9 @@ namespace SandS
                 DB.Close();
 */
             Visibility = Visibility.Hidden;
-            //var dispatcher = new Dispatcher();
-            //dispatcher.Show();
-            Close(); /*
-            }*/
+            var dispatcher = new Dispatcher();
+            dispatcher.Show();
+            Close();
         }
 
         private void Grid_GotFocus(object sender, RoutedEventArgs e)

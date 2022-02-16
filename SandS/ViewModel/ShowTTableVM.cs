@@ -35,12 +35,12 @@ namespace SandS.ViewModel
                 {
                     if (SelectedGroup != null)
                     {
-                        MondayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 1);
-                        TuesdayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 2);
-                        WednesdayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 3);
-                        ThursdayList =DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 4);
-                        FridayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 5);
-                        SaturdayList = DataWorker.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 6);
+                        MondayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 1);
+                        TuesdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 2);
+                        WednesdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 3);
+                        ThursdayList =AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 4);
+                        FridayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 5);
+                        SaturdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 6);
                      
                     }
                 });

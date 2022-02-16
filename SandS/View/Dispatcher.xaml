@@ -1,0 +1,268 @@
+﻿<Window
+    x:Class="SandS.View.Dispatcher"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:View="clr-namespace:SandS.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SandS.View"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodel="clr-namespace:SandS.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:DispatcherVM}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <TabControl
+            Grid.ColumnSpan="2"
+            Margin="0,0,-0.4,0"
+            materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+            materialDesign:ShadowAssist.ShadowDepth="Depth2"
+            RenderTransformOrigin="0.544,0.5"
+            Style="{StaticResource MaterialDesignNavigatilRailTabControl}">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
+                        Width="auto"
+                        Height="auto"
+                        Margin="0,15,0,0">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="DatabaseImport" />
+                        <TextBlock HorizontalAlignment="Center" Text="Импорт" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Button
+                        x:Name="ImportButton"
+                        Width="266"
+                        Height="55"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding ImportCommand}">
+                        <Grid Width="211" Height="55">
+                            <TextBlock
+                                Width="136"
+                                Margin="0,19"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="Выбрать файл" />
+                            <materialDesign:PackIcon
+                                Width="40"
+                                Height="35"
+                                Margin="27,7,0,13"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Kind="Folder" />
+                        </Grid>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
+                        Width="auto"
+                        Height="auto"
+                        Margin="0,15,0,0">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="ClockOutline" />
+                        <TextBlock HorizontalAlignment="Center" Text="Замены" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox
+                        x:Name="DepartmentCombobox"
+                        Height="49"
+                        Margin="10,44,9.8,0"
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Отделение"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="IdDepartment"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <ComboBox
+                        x:Name="GroupCombobox"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,44,9.6,0"
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Группа"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="IdGroup"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <ComboBox
+                        x:Name="LessonCombobox"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,118,9.6,0"
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Пара"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        DisplayMemberPath="LessonNumber"
+                        SelectedValuePath="IdLesson"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <ComboBox
+                        x:Name="DisciplineCombobox"
+                        Height="49"
+                        Margin="10,191,9.8,0"
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Предмет"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        DisplayMemberPath="GetDisciplineGroupTeacher.Discipline.Name"
+                        IsEnabled="False"
+                        SelectedValuePath="IdDisciplineGroupTeacher"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <DatePicker
+                        x:Name="DateBox"
+                        Height="49"
+                        Margin="10,118,9.8,0"
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Дата"
+                        FirstDayOfWeek="Monday"
+                        IsTodayHighlighted="True"
+                        Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                    <Button
+                        x:Name="AddButton"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,0,9.6,113"
+                        VerticalAlignment="Bottom"
+                        Content="Добавить"
+                        IsEnabled="False" />
+                    <ComboBox
+                        x:Name="OfficeCombobox"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,191,9.6,0"
+                        VerticalAlignment="Top"
+                        materialDesign:HintAssist.Hint="Кабинет"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        DisplayMemberPath="OfficeNumber"
+                        IsEnabled="False"
+                        SelectedValuePath="IdOffice"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
+                        Width="auto"
+                        Height="auto"
+                        Margin="0,15,0,0">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="Printer" />
+                        <TextBlock HorizontalAlignment="Center" Text="Печать" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="9*" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <ListBox
+                        x:Name="SelectedPrintType"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,9.6,9.4,255"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}">
+                        <ListBoxItem x:Name="TTableSelect" Content="Расписание" />
+                        <ListBoxItem x:Name="SubTTableSelect" Content="Замены" />
+                    </ListBox>
+                    <ComboBox
+                        x:Name="DepartmenBoxForPrint"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,63.6,9.4,201"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="Отделение"
+                        DisplayMemberPath="Name"
+                        IsEnabled="False"
+                        SelectedValuePath="IdDepartment"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <ComboBox
+                        x:Name="GroupComboboxForPrint"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,129.6,9.4,135"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="Группа"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        DisplayMemberPath="Name"
+                        IsEnabled="False"
+                        SelectedValuePath="IdGroup"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <DatePicker
+                        x:Name="DateBoxForPrint"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="10.2,191.6,9.4,73"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="Дата"
+                        FirstDayOfWeek="Monday"
+                        IsEnabled="False"
+                        IsTodayHighlighted="True"
+                        Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+
+                    <Button
+                        x:Name="PrintButton"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="49"
+                        Margin="11.2,254.6,9.4,10"
+                        VerticalAlignment="Center"
+                        Content="Распечатать"
+                        IsEnabled="False" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button
+            x:Name="ExitButton"
+            Margin="16,0,0,16"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+            Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+            ToolTip="MaterialDesignFloatingActionDarkButton">
+            <materialDesign:PackIcon
+                Width="22"
+                Height="20"
+                Kind="ExitToApp"
+                RenderTransformOrigin="0.5,0.5">
+                <materialDesign:PackIcon.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1" />
+                        <SkewTransform />
+                        <RotateTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </materialDesign:PackIcon.RenderTransform>
+            </materialDesign:PackIcon>
+        </Button>
+    </Grid>
+</Window>

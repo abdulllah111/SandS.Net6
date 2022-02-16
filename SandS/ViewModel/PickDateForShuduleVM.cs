@@ -34,7 +34,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    Departments = DataWorker.GetDepartments();
+                    Departments = AsyncGetApiData.GetDepartments();
                     GroupsIsEndable = false;
                 });
             }
@@ -48,7 +48,7 @@ namespace SandS.ViewModel
                     if (SelectedDepartment != null)
                     {
                         GroupsIsEndable = true;
-                        Groups = DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment);
+                        Groups = AsyncGetApiData.GroupsByDepartment(SelectedDepartment.IdDepartment);
                     }
                     else
                     {
@@ -63,7 +63,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    var vm = new ShowSubTTableVM(DataWorker.GetSubTTableByGroupAndDate(SelectedGroup.IdGroup, Date.DateStr()));
+                    var vm = new ShowSubTTableVM(AsyncGetApiData.GetSubTTableByGroupAndDate(SelectedGroup.IdGroup, Date.DateStr()));
                     ShowSubTtableUk = new ShowSubTTable(vm);
                     transitioner = 1;
                 });

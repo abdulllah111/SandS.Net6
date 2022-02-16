@@ -25,8 +25,8 @@ namespace SandS.Model
         [JsonPropertyName("group")]
         public Group Group { get; set; }
 
-        //private async Task<Teacher> GetTeacher() => IdTeacher != 0 ? await DataWorker.GetTeacher(IdTeacher) : await DataWorker.GetTeacher(TeacherName);
-        //private async Task<Group> GetGroup() => IdGroup != 0 ? await DataWorker.GetGroup(IdGroup) : await DataWorker.GetGroup(GroupName);
-        //private async Task<Discipline> GetDiscipline() => IdDiscipline != 0 ? await DataWorker.GetDiscipline(IdDiscipline) : await DataWorker.GetDiscipline(DisciplineName);
+        //private async Task<Teacher> GetTeacher() => IdTeacher != 0 ? await AsyncGetApiData.GetTeacher(IdTeacher) : await AsyncGetApiData.GetTeacher(TeacherName);
+        //private async Task<Group> GetGroup() => IdGroup != 0 ? await AsyncGetApiData.GetGroup(IdGroup) : await AsyncGetApiData.GetGroup(GroupName);
+        //private async Task<Discipline> GetDiscipline() => IdDiscipline != 0 ? await AsyncGetApiData.GetDiscipline(IdDiscipline) : await AsyncGetApiData.GetDiscipline(DisciplineName);
     }
 }

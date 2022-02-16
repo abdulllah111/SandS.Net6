@@ -10,7 +10,7 @@ using SandS.Services;
 
 namespace SandS.Model
 {
-    public class DataWorker
+    public static class AsyncGetApiData
     {
         public static TaskCompletion<SubTTable[]> GetSubTTableByGroupAndDate(int groupid, string date) =>
             ApiData<SubTTable[]>.Get($"http://uksivttimetable.000webhostapp.com/api/subttable/getforgroupanddate/{groupid}/{date}");

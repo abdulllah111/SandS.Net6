@@ -29,9 +29,9 @@ namespace SandS.Model
         public Office Office { get; set; }
         [JsonPropertyName("discipline_group_teacher")]
         public DisciplineGroupTeacher GetDisciplineGroupTeacher { get; set; }
-        //public async Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher() => (IdDisciplineGroupTeacher != 0) ? await DataWorker.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher) : await DataWorker.GetDisciplineGroupTeacher(DisciplineGroupTeacher);
-        //public async Task<WeekDay> WeekDay() => (IdWeekDay != 0) ? await DataWorker.GetWeekDay(IdWeekDay) : await DataWorker.GetWeekDay(WeekDayName);
-        //public async Task<Lesson> Lesson() => (IdLesson != 0) ? await DataWorker.GetLesson(IdLesson) : await DataWorker.GetLesson(LessonName);
-        //public async Task<Office> Office() => (IdOffice != 0) ? await DataWorker.GetOffice(IdOffice) : await DataWorker.GetOffice(OfficeName);
+        //public async Task<DisciplineGroupTeacher> GetDisciplineGroupTeacher() => (IdDisciplineGroupTeacher != 0) ? await AsyncGetApiData.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher) : await AsyncGetApiData.GetDisciplineGroupTeacher(DisciplineGroupTeacher);
+        //public async Task<WeekDay> WeekDay() => (IdWeekDay != 0) ? await AsyncGetApiData.GetWeekDay(IdWeekDay) : await AsyncGetApiData.GetWeekDay(WeekDayName);
+        //public async Task<Lesson> Lesson() => (IdLesson != 0) ? await AsyncGetApiData.GetLesson(IdLesson) : await AsyncGetApiData.GetLesson(LessonName);
+        //public async Task<Office> Office() => (IdOffice != 0) ? await AsyncGetApiData.GetOffice(IdOffice) : await AsyncGetApiData.GetOffice(OfficeName);
     }
 }

@@ -28,15 +28,15 @@ namespace SandS.Model
         public Lesson Lesson { get; set; }
         [JsonPropertyName("office")]
         public Office Office { get; set; }
-        //public TaskCompletion<DisciplineGroupTeacher> GetDisciplineGroupTeacher => new TaskCompletion<DisciplineGroupTeacher>(DataWorker.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher));
-        //public TaskCompletion<WeekDay> WeekDay => new TaskCompletion<WeekDay>(DataWorker.GetWeekDay(IdWeekDay));
-        //public TaskCompletion<Lesson> Lesson => new TaskCompletion<Lesson>(DataWorker.GetLesson(IdLesson));
-        //public TaskCompletion<Office> Office => new TaskCompletion<Office>(DataWorker.GetOffice(IdOffice));
+        //public TaskCompletion<DisciplineGroupTeacher> GetDisciplineGroupTeacher => new TaskCompletion<DisciplineGroupTeacher>(AsyncGetApiData.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher));
+        //public TaskCompletion<WeekDay> WeekDay => new TaskCompletion<WeekDay>(AsyncGetApiData.GetWeekDay(IdWeekDay));
+        //public TaskCompletion<Lesson> Lesson => new TaskCompletion<Lesson>(AsyncGetApiData.GetLesson(IdLesson));
+        //public TaskCompletion<Office> Office => new TaskCompletion<Office>(AsyncGetApiData.GetOffice(IdOffice));
 
-        //private async Task<DisciplineGroupTeacher> GeDisciplineGroupTeacher() => (IdDisciplineGroupTeacher != 0) ? await DataWorker.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher) : await DataWorker.GetDisciplineGroupTeacher(DisciplineGroupTeacher);
-        //private async Task<WeekDay> GetWeekDay() => (IdWeekDay != 0) ? await DataWorker.GetWeekDay(IdWeekDay) : await DataWorker.GetWeekDay(WeekDayName);
-        //private async Task<Lesson> GetLesson() => (IdLesson != 0) ? await DataWorker.GetLesson(IdLesson) : await DataWorker.GetLesson(LessonName);
-        //private async Task<Office> GetOffice() => (IdOffice != 0) ? await DataWorker.GetOffice(IdOffice) : await DataWorker.GetOffice(OfficeName);
+        //private async Task<DisciplineGroupTeacher> GeDisciplineGroupTeacher() => (IdDisciplineGroupTeacher != 0) ? await AsyncGetApiData.GetDisciplineGroupTeacher(IdDisciplineGroupTeacher) : await AsyncGetApiData.GetDisciplineGroupTeacher(DisciplineGroupTeacher);
+        //private async Task<WeekDay> GetWeekDay() => (IdWeekDay != 0) ? await AsyncGetApiData.GetWeekDay(IdWeekDay) : await AsyncGetApiData.GetWeekDay(WeekDayName);
+        //private async Task<Lesson> GetLesson() => (IdLesson != 0) ? await AsyncGetApiData.GetLesson(IdLesson) : await AsyncGetApiData.GetLesson(LessonName);
+        //private async Task<Office> GetOffice() => (IdOffice != 0) ? await AsyncGetApiData.GetOffice(IdOffice) : await AsyncGetApiData.GetOffice(OfficeName);
 
     }
 }

@@ -38,7 +38,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {;
-                    Departments = DataWorker.GetDepartments();
+                    Departments = AsyncGetApiData.GetDepartments();
                     Loading = false;
                 });
             }
@@ -51,7 +51,7 @@ namespace SandS.ViewModel
                 {
                     if (SelectedDepartment != null)
                     {
-                        Groups = DataWorker.GroupsByDepartment(SelectedDepartment.IdDepartment);
+                        Groups = AsyncGetApiData.GroupsByDepartment(SelectedDepartment.IdDepartment);
                         GroupsIsEndable = true;
                     }
                     else
