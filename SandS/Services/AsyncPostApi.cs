@@ -9,16 +9,13 @@ using System.Threading.Tasks;
 
 namespace SandS.Services
 {
-    public static class AsyncPostApi<T>
+    public static class AsyncPostApi
     {
-        private static HttpClient client = new HttpClient();
-        public static void Post(string url, object model)
+        public static async Task Post(string url, object model)
         {
-            if (!string.IsNullOrEmpty(url))
-            {
-                client.BaseAddress = new Uri($"{GloabalValues.ApiBaseUrl}");
-                client.PostAsJsonAsync(url, model);
-            }
+            var client = new HttpClient();
+            client.BaseAddress = new Uri($"{GloabalValues.ApiBaseUrl}");
+            await client.PostAsJsonAsync($"{url}", model);
         }
     }
 }

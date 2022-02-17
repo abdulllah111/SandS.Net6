@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,7 +57,7 @@ namespace SandS.ViewModel
                 });
             }
         }
-        private Task<bool> ImportAsync(string expath)
+        private async Task<bool> ImportAsync(string expath)
         {
             try
             {
@@ -77,7 +79,7 @@ namespace SandS.ViewModel
                 var weekday = "";
 
                 var department = Path.GetFileNameWithoutExtension(expath);
-                Department? depname = DepartmentInDb.Where(x=>  x.Name == department).First();
+                Department? depname = DepartmentInDb.Where(x => x.Name == department).First();
                 if (depname != null)
                 {
                     AsyncDeleteApi.Delete($"delete/{depname.IdDepartment}");
@@ -275,33 +277,37 @@ namespace SandS.ViewModel
 
                     foreach (var item in teachers)
                     {
-                        AsyncPostApi<Teacher>.Post("teacher", item);
+                        await AsyncPostApi.Post("teacher", item);
                     }
                     foreach (var item in disciplines)
                     {
-                        AsyncPostApi<Discipline>.Post("discipline", item);
+                        await AsyncPostApi.Post("discipline", item);
                     }
 
                     foreach (var item in offices)
                     {
-                        AsyncPostApi<Office>.Post("office", item);
+                        await AsyncPostApi.Post("office", item);
                     }
 
                     foreach (var item in departments)
                     {
-                        AsyncPostApi<Department>.Post("department", item);
+                        await AsyncPostApi.Post("department", item);
                     }
 
                     foreach (var item in groups)
                     {
-                        AsyncPostApi<Group>.Post("group", item);
+                        await AsyncPostApi.Post("group", item);
                     }
+
+                    GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"{GloabalValues.ApiBaseUrl}group").Get();
+                    DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"{GloabalValues.ApiBaseUrl}discipline").Get();
+                    TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"{GloabalValues.ApiBaseUrl}teacher").Get();
 
                     foreach (var item in DisciplineGroupTeacherInExcel)
                     {
-                        item.IdGroup = SyncGetApiData.GetGroupByName(item.GroupName).IdGroup;
-                        item.IdDiscipline = SyncGetApiData.GetDisciplineByName(item.DisciplineName).IdDiscipline;
-                        item.IdTeacher = item.TeacherName != "" ? SyncGetApiData.GetTeacherByName(item.TeacherName).IdTeacher : 0;
+                        item.IdGroup = GroupsInDb.Where(x => x.Name == item.GroupName).First().IdGroup;
+                        item.IdDiscipline = DisciplinesInDb.Where(x => x.Name == item.DisciplineName).First().IdDiscipline;
+                        item.IdTeacher = item.TeacherName != "" ? TeachersInDb.Where(x => x.Name == item.TeacherName).First().IdTeacher : 0;
                     }
 
                     if (DisciplineGroupTeachersInDb != null)
@@ -313,7 +319,7 @@ namespace SandS.ViewModel
                     ;
                     foreach (var item in disciplinegroupteachers)
                     {
-                        AsyncPostApi<Group>.Post("dgt", item);
+                        await AsyncPostApi.Post("dgt", item);
 
                     }
                     TTablesInExcel = TTablesInExcel
@@ -323,13 +329,18 @@ namespace SandS.ViewModel
                     foreach (var item in TTablesInExcel)
                         d +=
                             $"{item.DisciplineGroupTeacher.GroupName} : {item.DisciplineGroupTeacher.DisciplineName} : {item.WeekDayName}\r\n";
+                    WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"{GloabalValues.ApiBaseUrl}weekday").Get();
+                    OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
+                    LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"{GloabalValues.ApiBaseUrl}lesson").Get();
+                    DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
 
                     foreach (var item in TTablesInExcel)
                     {
-                        item.IdWeekDay = SyncGetApiData.GetWeekDayByName(item.WeekDayName).IdWeekDay;
-                        item.IdLesson = SyncGetApiData.GetLessonByName(item.LessonName).IdLesson;
-                        item.IdOffice = item.OfficeName != "" ? SyncGetApiData.GetOfficeByName(item.OfficeName).IdOffice : 0;
-                        item.IdDisciplineGroupTeacher = item.GetDisciplineGroupTeacher.IdDisciplineGroupTeacher;
+                        item.IdWeekDay = WeekDaysInDb.Where(x => x.Name == item.WeekDayName).First().IdWeekDay;
+                        item.IdLesson = LessonIdDb.Where(x => x.LessonNumber == item.LessonName).First().IdLesson;
+                        item.IdOffice = item.OfficeName != "" ? OfficesInDb.Where(x => x.OfficeNumber == item.OfficeName).First().IdOffice : 0;
+                        item.IdDisciplineGroupTeacher = DisciplineGroupTeachersInDb.First(x =>
+                                item.DisciplineGroupTeacher.GroupName == x.Group.Name && item.DisciplineGroupTeacher.DisciplineName == x.Discipline.Name).IdDisciplineGroupTeacher;
                     }
 
                     var tables = TTablesInDb != null
@@ -337,38 +348,18 @@ namespace SandS.ViewModel
                             l1.IdLesson == l2.IdLesson && l1.IdWeekDay == l2.IdWeekDay &&
                             l1.IdDisciplineGroupTeacher == l2.IdDisciplineGroupTeacher)).ToList()
                         : TTablesInExcel;
+                    var client = new HttpClient();
                     foreach (var item in tables)
                     {
-                        AsyncPostApi<Office>.Post("ttable", item);
+                        var a = new TTable { IdLesson = item.IdLesson, IdWeekDay = item.IdWeekDay, IdOffice = item.IdOffice, IdDisciplineGroupTeacher = item.IdDisciplineGroupTeacher };
+                        
+                        await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable", a);
                     }
-                    //using (var conn =
-                    //    new MySqlConnection("server=localhost;user=root;database=timetable;password=root;"))
-                    //{
-                    //    conn.Open();
-                    //    if (item.OfficeName != "" && item.WeekDayName != "" && item.LessonName != "")
-                    //    {
-                    //        var command = new MySqlCommand("INSERT INTO `ttable` " +
-                    //                                       "(`idweekday`, `idlesson`, `idoffice`, `iddisciplinegroupteacher`) " +
-                    //                                       $"VALUES ('{item.IdWeekDay}', '{item.IdLesson}', '{item.IdOffice}', '{item.IdDisciplineGroupTeacher}'); ",
-                    //            conn);
-                    //        command.ExecuteNonQuery();
-                    //    }
-                    //    else if (item.OfficeName == "" && item.WeekDayName != "" && item.LessonName != "")
-                    //    {
-                    //        var command = new MySqlCommand("INSERT INTO `ttable` " +
-                    //                                       "(`idweekday`, `idlesson`, `iddisciplinegroupteacher`) " +
-                    //                                       $"VALUES ('{item.IdWeekDay}', '{item.IdLesson}', '{item.IdDisciplineGroupTeacher}'); ",
-                    //            conn);
-                    //        command.ExecuteNonQuery();
-                    //    }
-                    //}
-
-                    return Task.FromResult(true);
                 }
+                return true;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

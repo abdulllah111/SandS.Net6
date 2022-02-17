@@ -1,8 +1,8 @@
-﻿using SandS.Services;
+﻿
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SandS.Model
+namespace ApiTests.Model
 {
     public class TTable
     {
@@ -19,9 +19,9 @@ namespace SandS.Model
         public string OfficeName { get; set; }
         [JsonPropertyName("iddisciplinegroupteacher")]
         public int IdDisciplineGroupTeacher { get; set; }
-        public DisciplineGroupTeacher? DisciplineGroupTeacher { get; set; }
+        public DisciplineGroupTeacher DisciplineGroupTeacher { get; set; }
         [JsonPropertyName("discipline_group_teacher")]
-        public DisciplineGroupTeacher? GetDisciplineGroupTeacher { get; set; }
+        public DisciplineGroupTeacher GetDisciplineGroupTeacher { get; set; }
         [JsonPropertyName("weekday")]
         public WeekDay WeekDay { get; set; }
         [JsonPropertyName("lesson")]
