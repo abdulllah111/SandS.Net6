@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SandS.Resource;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -15,7 +16,7 @@ namespace SandS.Services
         {
             if (!string.IsNullOrEmpty(url))
             {
-                client.BaseAddress = new Uri("http://abdul-arabp.ru/public/api/");
+                client.BaseAddress = new Uri($"{GloabalValues.ApiBaseUrl}");
                 client.PostAsJsonAsync(url, model);
             }
         }

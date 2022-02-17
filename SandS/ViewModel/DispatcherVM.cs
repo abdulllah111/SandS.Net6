@@ -17,6 +17,7 @@ namespace SandS.ViewModel
     internal class DispatcherVM : ViewModelBase
     {
 
+        private ObservableCollection<Department> DepartmentInDb;
         private ObservableCollection<Group> GroupsInDb;
         private ObservableCollection<Discipline> DisciplinesInDb;
         private ObservableCollection<Teacher> TeachersInDb;
@@ -28,15 +29,16 @@ namespace SandS.ViewModel
         private ObservableCollection<DisciplineGroupTeacher> DisciplineGroupTeachersInDb;
         public DispatcherVM()
         {
-            GroupsInDb = new SyncApiData<ObservableCollection<Group>>("http://abdul-arabp.ru/public/api/group").Get();
-            DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>("http://abdul-arabp.ru/public/api/discipline").Get();
-            TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>("http://abdul-arabp.ru/public/api/teacher").Get();
-            OfficesInDb = new SyncApiData<ObservableCollection<Office>>("http://abdul-arabp.ru/public/api/office").Get();
-            LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>("http://abdul-arabp.ru/public/api/lesson").Get();
-            WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>("http://abdul-arabp.ru/public/api/weekday").Get();
-            DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>("http://abdul-arabp.ru/public/api/department").Get();
-            TTablesInDb = new SyncApiData<ObservableCollection<TTable>>("http://abdul-arabp.ru/public/api/ttable").Get();
-            DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>("http://abdul-arabp.ru/public/api/dgt").Get();
+            DepartmentInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
+            GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"{GloabalValues.ApiBaseUrl}group").Get();
+            DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"{GloabalValues.ApiBaseUrl}discipline").Get();
+            TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"{GloabalValues.ApiBaseUrl}teacher").Get();
+            OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
+            LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"{GloabalValues.ApiBaseUrl}lesson").Get();
+            WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"{GloabalValues.ApiBaseUrl}weekday").Get();
+            DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
+            TTablesInDb = new SyncApiData<ObservableCollection<TTable>>($"{GloabalValues.ApiBaseUrl}ttable").Get();
+            DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
         }
         public DelegateCommand ImportCommand
         {
@@ -75,10 +77,10 @@ namespace SandS.ViewModel
                 var weekday = "";
 
                 var department = Path.GetFileNameWithoutExtension(expath);
-                var depname = new SyncApiData<Department>($"http://abdul-arabp.ru/public/api/department/name/{department}").Get();
-                if (depname.Name == department)
+                Department? depname = DepartmentInDb.Where(x=>  x.Name == department).First();
+                if (depname != null)
                 {
-                    var result = new SyncApiData<string>($"{GloabalValues.ApiBaseUrl}delete/{depname.IdDepartment}").Get();
+                    AsyncDeleteApi.Delete($"delete/{depname.IdDepartment}");
                 }
                 XLWorkbook workbook;
                 using (workbook = new XLWorkbook(expath))

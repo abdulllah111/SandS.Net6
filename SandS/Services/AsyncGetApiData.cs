@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using SandS.Resource;
 using SandS.Services;
 
 namespace SandS.Model
@@ -13,46 +14,46 @@ namespace SandS.Model
     public static class AsyncGetApiData
     {
         public static TaskCompletion<SubTTable[]> GetSubTTableByGroupAndDate(int groupid, string date) =>
-            ApiData<SubTTable[]>.Get($"http://uksivttimetable.000webhostapp.com/api/subttable/getforgroupanddate/{groupid}/{date}");
+            ApiData<SubTTable[]>.Get($"{GloabalValues.ApiBaseUrl}subttable/getforgroupanddate/{groupid}/{date}");
 
         public static TaskCompletion<ObservableCollection<TTable>> GetTtableByGroupAndWeekDay(int groupid, int weekday) =>
-            ApiData<ObservableCollection<TTable>>.Get($"http://uksivttimetable.000webhostapp.com/api/ttable/getforgroup/{groupid}/{weekday}");
+            ApiData<ObservableCollection<TTable>>.Get($"{GloabalValues.ApiBaseUrl}ttable/getforgroup/{groupid}/{weekday}");
         
         public static TaskCompletion<ObservableCollection<Group>> GroupsByDepartment(int DepartmentId) =>
-            ApiData<ObservableCollection<Group>>.Get($"http://uksivttimetable.000webhostapp.com/api/department/{DepartmentId}/groups");
+            ApiData<ObservableCollection<Group>>.Get($"{GloabalValues.ApiBaseUrl}department/{DepartmentId}/groups");
 
         public static TaskCompletion<Teacher> GetTeacher(int? id) => 
-            ApiData<Teacher>.Get($"https://uksivttimetable.000webhostapp.com/public/api/teacher/{id}");
+            ApiData<Teacher>.Get($"{GloabalValues.ApiBaseUrl}teacher/{id}");
 
         public static TaskCompletion<Teacher> GetTeacher(string name) =>
-            ApiData<Teacher>.Get($"https://uksivttimetable.000webhostapp.com/public/api/teacher/name/{name}");
+            ApiData<Teacher>.Get($"{GloabalValues.ApiBaseUrl}teacher/name/{name}");
 
         public static TaskCompletion<ObservableCollection<Teacher>> GetTeachers() =>
-            ApiData<ObservableCollection<Teacher>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/teacher");
+            ApiData<ObservableCollection<Teacher>>.Get($"{GloabalValues.ApiBaseUrl}teacher");
 
 
         public static TaskCompletion<Discipline> GetDiscipline(int id) =>
-            ApiData<Discipline>.Get($"https://uksivttimetable.000webhostapp.com/public/api/discipline/{id}");
+            ApiData<Discipline>.Get($"{GloabalValues.ApiBaseUrl}discipline/{id}");
 
         public static TaskCompletion<Discipline> GetDiscipline(string name) =>
-            ApiData<Discipline>.Get($"https://uksivttimetable.000webhostapp.com/public/api/discipline/name/{name}");
+            ApiData<Discipline>.Get($"{GloabalValues.ApiBaseUrl}discipline/name/{name}");
 
         public static TaskCompletion<ObservableCollection<Discipline>> GetDisciplines() =>
-            ApiData<ObservableCollection<Discipline>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/discipline");
+            ApiData<ObservableCollection<Discipline>>.Get($"{GloabalValues.ApiBaseUrl}discipline");
         public static TaskCompletion<Group> GetGroup(int id) =>
-            ApiData<Group>.Get($"https://uksivttimetable.000webhostapp.com/public/api/group/{id}");
+            ApiData<Group>.Get($"{GloabalValues.ApiBaseUrl}group/{id}");
 
         public static TaskCompletion<ObservableCollection<Group>> GetGroups() => 
-            ApiData<ObservableCollection<Group>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/group");
+            ApiData<ObservableCollection<Group>>.Get($"{GloabalValues.ApiBaseUrl}group");
 
         public static TaskCompletion<Group> GetGroup(string name) =>
-            ApiData<Group>.Get($"https://uksivttimetable.000webhostapp.com/public/api/group/name/{name}");
+            ApiData<Group>.Get($"{GloabalValues.ApiBaseUrl}group/name/{name}");
 
         public static TaskCompletion<WeekDay> GetWeekDay(int id) =>
-            ApiData<WeekDay>.Get($"https://uksivttimetable.000webhostapp.com/public/api/weekday/{id}");
+            ApiData<WeekDay>.Get($"{GloabalValues.ApiBaseUrl}weekday/{id}");
 
         public static TaskCompletion<ObservableCollection<WeekDay>> GetWeekDays() =>
-            ApiData<ObservableCollection<WeekDay>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/weekday");
+            ApiData<ObservableCollection<WeekDay>>.Get($"{GloabalValues.ApiBaseUrl}weekday");
 
         //public static async Task<WeekDay> GetWeekDay(string name)
         //{
@@ -61,7 +62,7 @@ namespace SandS.Model
         //}
 
         public static TaskCompletion<Lesson> GetLesson(int id) =>
-            ApiData<Lesson>.Get($"https://uksivttimetable.000webhostapp.com/public/api/lesson/{id}");
+            ApiData<Lesson>.Get($"{GloabalValues.ApiBaseUrl}lesson/{id}");
 
         //public static async Task<Lesson> GetLesson(int number)
         //{
@@ -69,11 +70,11 @@ namespace SandS.Model
         //    return a.Where(x => x.LessonNumber == number).First();
         //}
         public static TaskCompletion<ObservableCollection<Lesson>> GetLessons() =>
-            ApiData<ObservableCollection<Lesson>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/lesson");
+            ApiData<ObservableCollection<Lesson>>.Get($"{GloabalValues.ApiBaseUrl}lesson");
 
 
         public static TaskCompletion<Office> GetOffice(int? id) =>
-            ApiData<Office>.Get($"https://uksivttimetable.000webhostapp.com/public/api/office/{id}");
+            ApiData<Office>.Get($"{GloabalValues.ApiBaseUrl}office/{id}");
 
 
         //public static async Task<Office> GetOffice(string number)
@@ -82,10 +83,10 @@ namespace SandS.Model
         //    return a.Where(x => x.OfficeNumber == number).First();
         //}
         public static TaskCompletion<ObservableCollection<Office>> GetOffices() =>
-            ApiData<ObservableCollection<Office>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/office");
+            ApiData<ObservableCollection<Office>>.Get($"{GloabalValues.ApiBaseUrl}office");
 
         public static TaskCompletion<Department> GetDepartment(int id) =>
-            ApiData<Department>.Get($"https://uksivttimetable.000webhostapp.com/public/api/department/{id}");
+            ApiData<Department>.Get($"{GloabalValues.ApiBaseUrl}department/{id}");
 
         //public async static Task<Department> GetDepartment(string name)
         //{
@@ -94,21 +95,21 @@ namespace SandS.Model
         //}
 
         public static TaskCompletion<ObservableCollection<Department>> GetDepartments() =>
-            ApiData<ObservableCollection<Department>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/department");
+            ApiData<ObservableCollection<Department>>.Get($"{GloabalValues.ApiBaseUrl}department");
 
         public static TaskCompletion<ObservableCollection<TTable>> GetTTables() =>
-            ApiData<ObservableCollection<TTable>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/ttable");
+            ApiData<ObservableCollection<TTable>>.Get($"{GloabalValues.ApiBaseUrl}ttable");
 
         public static TaskCompletion<ObservableCollection<SubTTable>> GetSubTtables() =>
-            ApiData<ObservableCollection<SubTTable>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/subttables");
+            ApiData<ObservableCollection<SubTTable>>.Get($"{GloabalValues.ApiBaseUrl}subttables");
 
         public static TaskCompletion<ObservableCollection<DisciplineGroupTeacher>> GetDisciplineGroupTeachers() =>
-            ApiData<ObservableCollection<DisciplineGroupTeacher>>.Get($"https://uksivttimetable.000webhostapp.com/public/api/dgt");
+            ApiData<ObservableCollection<DisciplineGroupTeacher>>.Get($"{GloabalValues.ApiBaseUrl}dgt");
 
         public static TaskCompletion<DisciplineGroupTeacher> GetDisciplineGroupTeacher(int id) =>
-            ApiData<DisciplineGroupTeacher>.Get($"https://uksivttimetable.000webhostapp.com/public/api/dgt/{id}");
+            ApiData<DisciplineGroupTeacher>.Get($"{GloabalValues.ApiBaseUrl}dgt/{id}");
 
         public static TaskCompletion<DisciplineGroupTeacher> GetDisciplineGroupTeacher(DisciplineGroupTeacher disciplineGroupTeacher) =>
-            ApiData<DisciplineGroupTeacher>.Get($"https://uksivttimetable.000webhostapp.com/public/api/dgt");
+            ApiData<DisciplineGroupTeacher>.Get($"{GloabalValues.ApiBaseUrl}dgt");
     }
 }

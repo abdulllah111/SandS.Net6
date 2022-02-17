@@ -7,6 +7,6 @@ namespace SandS.Model
         [JsonPropertyName("idlesson")]
         public int IdLesson { get; set; }
         [JsonPropertyName("lesson_number")]
-        public int LessonNumber { get; set; }
+        public string LessonNumber { get; set; }
     }
 }
