@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SandS.Services
 {
-    public static class AsyncDeleteApi
+    public class AsyncDeleteApi
     {
-        private static HttpClient client = new HttpClient();
         public static void Delete(string url)
         {
+            HttpClient client = new HttpClient();
             client.BaseAddress = new Uri($"{GloabalValues.ApiBaseUrl}");
             client.DeleteAsync(url);
         }

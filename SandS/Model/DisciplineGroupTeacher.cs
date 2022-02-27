@@ -14,8 +14,8 @@ namespace SandS.Model
         public int IdDiscipline { get; set; }
         [JsonPropertyName("idgroup")]
         public int IdGroup { get; set; }
-        public string TeacherName { get; set; }
-        public string DisciplineName { get; set; }
+        public string? TeacherName { get; set; }
+        public string? DisciplineName { get; set; }
         public string GroupName { get; set; }
 
         [JsonPropertyName("teacher")]

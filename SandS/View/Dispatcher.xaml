@@ -10,11 +10,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewmodel="clr-namespace:SandS.ViewModel"
+    Width="850"
+    Height="500"
+    MinWidth="850"
+    MinHeight="500"
     d:DataContext="{d:DesignInstance Type=viewmodel:DispatcherVM}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
+
         <TabControl
             Grid.ColumnSpan="2"
             Margin="0,0,-0.4,0"
@@ -37,13 +40,33 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
+                    <ProgressBar
+                        Width="50"
+                        Height="49"
+                        Margin="339,191,339,193"
+                        HorizontalAlignment="Stretch"
+                        IsIndeterminate="True"
+                        RenderTransformOrigin="0.5,0.5"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Visibility="{Binding Loading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Value="0">
+                        <ProgressBar.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="-1" />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </ProgressBar.RenderTransform>
+                    </ProgressBar>
                     <Button
                         x:Name="ImportButton"
                         Width="266"
                         Height="55"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Command="{Binding ImportCommand}">
+                        Command="{Binding ImportCommand}"
+                        Visibility="{Binding ImportByttunIsEnable, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Grid Width="211" Height="55">
                             <TextBlock
                                 Width="136"
@@ -246,9 +269,10 @@
             Margin="16,0,0,16"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
+            Click="ExitButton_Click"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
             Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-            ToolTip="MaterialDesignFloatingActionDarkButton">
+            ToolTip="MaterialDesignFloatingActionDarkButton" Cursor="Hand">
             <materialDesign:PackIcon
                 Width="22"
                 Height="20"

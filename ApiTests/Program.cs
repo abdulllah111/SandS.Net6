@@ -9,8 +9,8 @@ using System.Net.Http.Json;
 //using System.Net.Http.Json;
 //using System.Text.Json;
 
-var a = new TTable { IdLesson = 1, IdWeekDay = 1, IdOffice = 4065, IdDisciplineGroupTeacher = 5888 };
-AsyncPost.Post("ttable", a);
+//var a = new TTable { IdLesson = 1, IdWeekDay = 1, IdOffice = 4065, IdDisciplineGroupTeacher = 5888 };
+//AsyncPost.Post("ttable", a);
 Console.WriteLine();
 
 
@@ -18,19 +18,29 @@ Console.WriteLine();
 //var p = new Department() { Name = "asasasasa" };
 //client.BaseAddress = new Uri("http://localhost:8080/api/");
 //client.PostAsJsonAsync("department", p);
+
+
+var ttable = new ApiData<IEnumerable<TTable>>($"http://localhost:8080/api/ttable/getforgroup/1188/2").Get();
+
 Console.ReadKey();
 
 //namespace Namespace
 //{
-static class AsyncPost
-{
-    public static void Post(string url, object model)
-    {
-        var client = new HttpClient();
-        client.BaseAddress = new Uri("http://localhost:8080/api/");
-        client.PostAsJsonAsync($"{url}", model);
-    }
-}
+
+
+
+//static class AsyncPost
+//{
+//    public static void Post(string url, object model)
+//    {
+//        var client = new HttpClient();
+//        client.BaseAddress = new Uri("http://localhost:8080/api/");
+//        client.PostAsJsonAsync($"{url}", model);
+//    }
+//}
+
+
+
 //}
 //static ObservableCollection<Group> GetGroup()
 //{

@@ -7,6 +7,6 @@ namespace SandS.Model
         [JsonPropertyName("iddiscipline")]
         public int IdDiscipline { get; set; }
         [JsonPropertyName("discipline_name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

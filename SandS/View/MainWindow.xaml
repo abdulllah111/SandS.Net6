@@ -87,7 +87,7 @@
             Click="ExitButton_Click"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-            ToolTip="MaterialDesignFloatingActionDarkButton">
+            ToolTip="MaterialDesignFloatingActionDarkButton" Cursor="Hand">
             <materialDesign:PackIcon
                 Width="22"
                 Height="20"

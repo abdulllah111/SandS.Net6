@@ -26,5 +26,11 @@ namespace SandS.View
             InitializeComponent();
             DataContext = new DispatcherVM();
         }
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            var login = new Login();
+            login.Show();
+            Close();
+        }
     }
 }

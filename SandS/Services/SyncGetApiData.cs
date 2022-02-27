@@ -22,5 +22,7 @@ namespace SandS.Services
             new SyncApiData<Lesson>($"{GloabalValues.ApiBaseUrl}lesson/name", new Lesson { LessonNumber = name }).Post();
         public static Office GetOfficeByName(string name) => 
             new SyncApiData<Office>($"{GloabalValues.ApiBaseUrl}office/name", new Office { OfficeNumber = name }).Post();
+        public static Department GetDepartmentByName(string name) =>
+            new SyncApiData<Department>($"{GloabalValues.ApiBaseUrl}department", new Department { Name = name }).Post();
     }
 }

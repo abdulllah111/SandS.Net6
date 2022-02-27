@@ -29,18 +29,13 @@ namespace SandS.ViewModel
         private ObservableCollection<Department> DepartmentsInDb;
         private ObservableCollection<TTable> TTablesInDb;
         private ObservableCollection<DisciplineGroupTeacher> DisciplineGroupTeachersInDb;
+        private string expath;
+        public bool Loading { get; set; }
+        public bool ImportByttunIsEnable { get; set; }
+
         public DispatcherVM()
         {
-            DepartmentInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
-            GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"{GloabalValues.ApiBaseUrl}group").Get();
-            DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"{GloabalValues.ApiBaseUrl}discipline").Get();
-            TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"{GloabalValues.ApiBaseUrl}teacher").Get();
-            OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
-            LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"{GloabalValues.ApiBaseUrl}lesson").Get();
-            WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"{GloabalValues.ApiBaseUrl}weekday").Get();
-            DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
-            TTablesInDb = new SyncApiData<ObservableCollection<TTable>>($"{GloabalValues.ApiBaseUrl}ttable").Get();
-            DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
+            ImportByttunIsEnable = true;
         }
         public DelegateCommand ImportCommand
         {
@@ -48,29 +43,50 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(async () =>
                 {
-                    string expath;
                     var dialog = new OpenFileDialog();
                     if (dialog.ShowDialog() == false) return;
                     expath = dialog.FileName;
                     var department = Path.GetFileNameWithoutExtension(expath);
-                    await ImportAsync(expath);
+                    try
+                    {
+                        ImportByttunIsEnable = false;
+                        Loading = true;
+                        DepartmentInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
+                        GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"{GloabalValues.ApiBaseUrl}group").Get();
+                        DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"{GloabalValues.ApiBaseUrl}discipline").Get();
+                        TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"{GloabalValues.ApiBaseUrl}teacher").Get();
+                        OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
+                        LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"{GloabalValues.ApiBaseUrl}lesson").Get();
+                        WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"{GloabalValues.ApiBaseUrl}weekday").Get();
+                        DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
+                        TTablesInDb = new SyncApiData<ObservableCollection<TTable>>($"{GloabalValues.ApiBaseUrl}ttable").Get();
+                        DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
+                        
+                        await Task.Run(ImportAsync).ContinueWith(_ => { Loading = false; ImportByttunIsEnable = true; }, TaskScheduler.FromCurrentSynchronizationContext());
+                        //await ImportAsync();  
+                    }
+                    catch
+                    {
+                        return;
+                    }
                 });
             }
         }
-        private async Task<bool> ImportAsync(string expath)
+        private async Task<bool> ImportAsync()
         {
+            TTable f = null;
             try
             {
                 DisciplineGroupTeacher? disciplineGroupTeacher = null;
-                var GroupsInExcel = new List<Group>();
-                var DisciplinesInExcel = new List<Discipline>();
-                var TeachersInExcel = new List<Teacher>();
-                var OfficesInExcel = new List<Office>();
-                var LessonInExcel = new List<Lesson>();
-                var WeekDaysInExcel = new List<WeekDay>();
-                var DepartmentsInExcel = new List<Department>();
-                var TTablesInExcel = new List<TTable>();
-                var DisciplineGroupTeacherInExcel = new List<DisciplineGroupTeacher>();
+                var GroupsInExcel = new ObservableCollection<Group>();
+                var DisciplinesInExcel = new ObservableCollection<Discipline>();
+                var TeachersInExcel = new ObservableCollection<Teacher>();
+                var OfficesInExcel = new ObservableCollection<Office>();
+                var LessonInExcel = new ObservableCollection<Lesson>();
+                var WeekDaysInExcel = new ObservableCollection<WeekDay>();
+                var DepartmentsInExcel = new ObservableCollection<Department>();
+                var TTablesInExcel = new ObservableCollection<TTable>();
+                var DisciplineGroupTeacherInExcel = new ObservableCollection<DisciplineGroupTeacher>();
                 var group = "";
                 var teacher = "";
                 var discipline = "";
@@ -82,7 +98,12 @@ namespace SandS.ViewModel
                 Department? depname = DepartmentInDb.Where(x => x.Name == department).First();
                 if (depname != null)
                 {
+                    var delete = new AsyncDeleteApi();
                     AsyncDeleteApi.Delete($"delete/{depname.IdDepartment}");
+                }
+                else
+                {
+                    depname = SyncGetApiData.GetDepartmentByName(department);
                 }
                 XLWorkbook workbook;
                 using (workbook = new XLWorkbook(expath))
@@ -99,7 +120,8 @@ namespace SandS.ViewModel
                             if (group != "")
                                 GroupsInExcel.Add(new Group
                                 {
-                                    Name = group.DeleteErrors()
+                                    Name = group.DeleteErrors(),
+                                    IdDepartment = depname.IdDepartment
                                 });
                             for (var j = 3; j <= 85; j += 1)
                             {
@@ -228,48 +250,59 @@ namespace SandS.ViewModel
                             ;
                         }
 
-                    IEnumerable<Group>? groups = null;
-                    IEnumerable<Teacher>? teachers = null;
-                    IEnumerable<Discipline>? disciplines = null;
-                    IEnumerable<Office>? offices = null;
-                    IEnumerable<Department>? departments = null;
-                    IEnumerable<DisciplineGroupTeacher>? disciplinegroupteachers = null;
+                    ObservableCollection<Group>? groups = null;
+                    ObservableCollection<Teacher>? teachers = null;
+                    ObservableCollection<Discipline>? disciplines = null;
+                    ObservableCollection<Office>? offices = null;
+                    ObservableCollection<Department>? departments = null;
+                    ObservableCollection<DisciplineGroupTeacher>? disciplinegroupteachers = null;
 
                     var ttables = new List<TTable>();
-                    OfficesInExcel = OfficesInExcel.GroupBy(x => x.OfficeNumber).Select(x => x.First()).ToList();
-                    if (OfficesInDb != null)
-                        offices = OfficesInExcel.Where(x => !OfficesInDb.Any(x2 => x2.OfficeNumber == x.OfficeNumber));
-                    else
+                    OfficesInExcel = new ObservableCollection<Office>(OfficesInExcel.GroupBy(x => x.OfficeNumber).Select(x => x.First()).ToList());
+                    if (OfficesInDb.Count != 0)
+                        offices = new ObservableCollection<Office>(OfficesInExcel.Where(x => !OfficesInDb.Any(x2 => x2.OfficeNumber == x.OfficeNumber)));
+                    if (OfficesInDb.Count != 0 && offices.Count == 0)
+                        offices = OfficesInDb;
+                    else if (offices.Count == 0 && OfficesInDb.Count == 0)
                         offices = OfficesInExcel;
                     ;
 
 
-                    GroupsInExcel = GroupsInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList();
-                    if (GroupsInDb != null)
-                        groups = GroupsInExcel.Where(x => !GroupsInDb.Any(x2 => x2.Name == x.Name));
-                    else
+                    GroupsInExcel = new ObservableCollection<Group>(GroupsInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
+                    if (GroupsInDb.Count != 0)
+                        groups = new ObservableCollection<Group>(GroupsInExcel.Where(x => !GroupsInDb.Any(x2 => x2.Name == x.Name)));
+                    if(groups.Count == 0 || groups == null && GroupsInDb.Count != 0)
+                        groups = GroupsInDb;
+                    else if(groups.Count == 0 || groups == null && GroupsInDb.Count == 0)
                         groups = GroupsInExcel;
                     ;
-                    TeachersInExcel = TeachersInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList();
-                    if (TeachersInDb != null)
-                        teachers = TeachersInExcel.Where(x => !TeachersInDb.Any(x2 => x2.Name == x.Name));
-                    else
+                    TeachersInExcel = new ObservableCollection<Teacher>(TeachersInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
+                    if (TeachersInDb.Count != 0)
+                        teachers = new ObservableCollection<Teacher>(TeachersInExcel.Where(x => !TeachersInDb.Any(x2 => x2.Name == x.Name)));
+                    if (teachers.Count == 0 || teachers == null && TeachersInDb.Count != 0)
+                        teachers = TeachersInDb;
+                    else if (teachers.Count == 0 || teachers == null && TeachersInDb.Count == 0)
                         teachers = TeachersInExcel;
                     ;
-                    DisciplinesInExcel = DisciplinesInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList();
-                    if (DisciplinesInDb != null)
-                        disciplines = DisciplinesInExcel.Where(x => !DisciplinesInDb.Any(x2 => x2.Name == x.Name));
-                    else
+                    DisciplinesInExcel = new ObservableCollection<Discipline>(DisciplinesInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
+                    if (DisciplinesInDb.Count != 0)
+                        disciplines = new ObservableCollection<Discipline>(DisciplinesInExcel.Where(x => !DisciplinesInDb.Any(x2 => x2.Name == x.Name)));
+                    if (disciplines.Count == 0 || disciplines == null && DisciplinesInDb.Count != 0)
+                        disciplines = DisciplinesInDb;
+                    else if (disciplines.Count == 0 || disciplines == null && DisciplinesInDb.Count == 0)
                         disciplines = DisciplinesInExcel;
                     ;
-                    DepartmentsInExcel = DepartmentsInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList();
-                    if (DepartmentsInDb != null)
-                        departments = DepartmentsInExcel.Where(x => !DepartmentsInDb.Any(x2 => x2.Name == x.Name));
-                    else
+                    DepartmentsInExcel = new ObservableCollection<Department>(DepartmentsInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
+                    if (DepartmentsInDb.Count != 0)
+                        departments = new ObservableCollection<Department>(DepartmentsInExcel.Where(x => !DepartmentsInDb.Any(x2 => x2.Name == x.Name)));
+                    if (departments.Count == 0 || departments == null && DepartmentInDb.Count != 0)
+                        departments = DepartmentsInDb;
+                    else if(departments.Count == 0 || departments == null && DepartmentInDb.Count == 0)
                         departments = DepartmentsInExcel;
 
-                    DisciplineGroupTeacherInExcel = DisciplineGroupTeacherInExcel
-                        .GroupBy(x => new { x.GroupName, x.DisciplineName }).Select(x => x.First()).ToList();
+
+                    DisciplineGroupTeacherInExcel = new ObservableCollection<DisciplineGroupTeacher>(DisciplineGroupTeacherInExcel
+                        .GroupBy(x => new { x.GroupName, x.DisciplineName }).Select(x => x.First()).ToList());
 
                     var t = "";
                     foreach (var item in DisciplineGroupTeacherInExcel)
@@ -277,89 +310,99 @@ namespace SandS.ViewModel
 
                     foreach (var item in teachers)
                     {
-                        await AsyncPostApi.Post("teacher", item);
+                        item.IdTeacher = item.IdTeacher == 0 ? new SyncApiData<Teacher>($"{GloabalValues.ApiBaseUrl}teacher", item).Post().IdTeacher : item.IdTeacher;
                     }
                     foreach (var item in disciplines)
                     {
-                        await AsyncPostApi.Post("discipline", item);
+                        item.IdDiscipline = item.IdDiscipline == 0 ? new SyncApiData<Discipline>($"{GloabalValues.ApiBaseUrl}discipline", item).Post().IdDiscipline : item.IdDiscipline;
                     }
 
                     foreach (var item in offices)
                     {
-                        await AsyncPostApi.Post("office", item);
+                        item.IdOffice = item.IdOffice == 0 ? new SyncApiData<Office>($"{GloabalValues.ApiBaseUrl}office", item).Post().IdOffice : item.IdOffice;
                     }
 
                     foreach (var item in departments)
                     {
-                        await AsyncPostApi.Post("department", item);
+                        item.IdDepartment = item.IdDepartment == 0 ? new SyncApiData<Department>($"{GloabalValues.ApiBaseUrl}department", item).Post().IdDepartment : item.IdDepartment;
                     }
 
                     foreach (var item in groups)
                     {
-                        await AsyncPostApi.Post("group", item);
+                        item.IdGroup =  item.IdGroup == 0 ? new SyncApiData<Group>($"{GloabalValues.ApiBaseUrl}group", item).Post().IdGroup : item.IdGroup;
                     }
-
-                    GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"{GloabalValues.ApiBaseUrl}group").Get();
-                    DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"{GloabalValues.ApiBaseUrl}discipline").Get();
-                    TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"{GloabalValues.ApiBaseUrl}teacher").Get();
 
                     foreach (var item in DisciplineGroupTeacherInExcel)
                     {
-                        item.IdGroup = GroupsInDb.Where(x => x.Name == item.GroupName).First().IdGroup;
-                        item.IdDiscipline = DisciplinesInDb.Where(x => x.Name == item.DisciplineName).First().IdDiscipline;
-                        item.IdTeacher = item.TeacherName != "" ? TeachersInDb.Where(x => x.Name == item.TeacherName).First().IdTeacher : 0;
+                        item.IdGroup = groups.Where(x => x.Name == item.GroupName).First().IdGroup;
+                        item.IdDiscipline = disciplines.Where(x => x.Name == item.DisciplineName).First().IdDiscipline;
+                        item.IdTeacher = item.TeacherName != "" ? teachers.Where(x => x.Name == item.TeacherName).First().IdTeacher : 0;
                     }
-
-                    if (DisciplineGroupTeachersInDb != null)
-                        disciplinegroupteachers = DisciplineGroupTeacherInExcel.Where(l2 =>
+                    string a = "";
+                    if (DisciplineGroupTeachersInDb.Count != 0)
+                        disciplinegroupteachers = new ObservableCollection<DisciplineGroupTeacher>(DisciplineGroupTeacherInExcel.Where(l2 =>
                             !DisciplineGroupTeachersInDb.Any(l1 =>
-                                l1.IdGroup == l2.IdGroup && l1.IdDiscipline == l2.IdDiscipline)).ToList();
-                    else
-                        disciplinegroupteachers = DisciplineGroupTeacherInExcel;
-                    ;
-                    foreach (var item in disciplinegroupteachers)
+                                l1.IdGroup == l2.IdGroup && l1.IdDiscipline == l2.IdDiscipline)).ToList());
+                    if (disciplinegroupteachers?.Count == 0 & disciplinegroupteachers == null && DisciplineGroupTeachersInDb.Count != 0)
+                        disciplinegroupteachers = DisciplineGroupTeachersInDb;
+                    else if(disciplinegroupteachers?.Count == 0 || disciplinegroupteachers == null && DisciplineGroupTeachersInDb.Count == 0)
                     {
-                        await AsyncPostApi.Post("dgt", item);
-
+                        disciplinegroupteachers = DisciplineGroupTeacherInExcel;
+                        foreach (var item in disciplinegroupteachers)
+                        {
+                            a += $"{item.DisciplineName} : {item.GroupName} : {item.TeacherName}\n\r";
+                            _ = new SyncApiData<DisciplineGroupTeacher>($"{GloabalValues.ApiBaseUrl}dgt", item).Post();
+                        }
                     }
-                    TTablesInExcel = TTablesInExcel
+                   
+                    
+                    TTablesInExcel = new ObservableCollection<TTable>(TTablesInExcel
                         .GroupBy(x => new { x.WeekDayName, x.LessonName, x.DisciplineGroupTeacher }).Select(x => x.First())
-                        .ToList();
+                        .ToList());
                     var d = "";
                     foreach (var item in TTablesInExcel)
-                        d +=
-                            $"{item.DisciplineGroupTeacher.GroupName} : {item.DisciplineGroupTeacher.DisciplineName} : {item.WeekDayName}\r\n";
-                    WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"{GloabalValues.ApiBaseUrl}weekday").Get();
-                    OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
-                    LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"{GloabalValues.ApiBaseUrl}lesson").Get();
-                    DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
-
+                    {
+                        d += $"{item.DisciplineGroupTeacher.GroupName} : {item.DisciplineGroupTeacher.DisciplineName} : {item.WeekDayName}\r\n";
+                    }
+                    disciplinegroupteachers = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
+                    foreach (var item in disciplinegroupteachers)
+                    {
+                        a += $"{item.Discipline.Name} : {item.Group.Name} : {item.Teacher.Name}\n\r";
+                    }
+                    string b = "";
                     foreach (var item in TTablesInExcel)
                     {
+                        f = item;
                         item.IdWeekDay = WeekDaysInDb.Where(x => x.Name == item.WeekDayName).First().IdWeekDay;
                         item.IdLesson = LessonIdDb.Where(x => x.LessonNumber == item.LessonName).First().IdLesson;
-                        item.IdOffice = item.OfficeName != "" ? OfficesInDb.Where(x => x.OfficeNumber == item.OfficeName).First().IdOffice : 0;
-                        item.IdDisciplineGroupTeacher = DisciplineGroupTeachersInDb.First(x =>
-                                item.DisciplineGroupTeacher.GroupName == x.Group.Name && item.DisciplineGroupTeacher.DisciplineName == x.Discipline.Name).IdDisciplineGroupTeacher;
+                        item.IdOffice = item.OfficeName != "" ? offices.Where(x => x.OfficeNumber == item.OfficeName).First().IdOffice : 0;
+                        item.IdDisciplineGroupTeacher = disciplinegroupteachers.Where(x =>
+                                item.DisciplineGroupTeacher.GroupName == x.Group.Name && item.DisciplineGroupTeacher.DisciplineName == x.Discipline.Name).First().IdDisciplineGroupTeacher;
+                        
                     }
 
-                    var tables = TTablesInDb != null
-                        ? TTablesInExcel.Where(l2 => !TTablesInDb.Any(l1 =>
-                            l1.IdLesson == l2.IdLesson && l1.IdWeekDay == l2.IdWeekDay &&
-                            l1.IdDisciplineGroupTeacher == l2.IdDisciplineGroupTeacher)).ToList()
-                        : TTablesInExcel;
+                    //var tables = TTablesInDb != null
+                    //    ? new ObservableCollection<TTable>(TTablesInExcel.Where(l2 => !TTablesInDb.Any(l1 =>
+                    //        l1.IdLesson == l2.IdLesson && l1.IdWeekDay == l2.IdWeekDay &&
+                    //        l1.IdDisciplineGroupTeacher == l2.IdDisciplineGroupTeacher)).ToList())
+                    //    : TTablesInExcel;
+                    var tables = TTablesInExcel;
                     var client = new HttpClient();
                     foreach (var item in tables)
                     {
-                        var a = new TTable { IdLesson = item.IdLesson, IdWeekDay = item.IdWeekDay, IdOffice = item.IdOffice, IdDisciplineGroupTeacher = item.IdDisciplineGroupTeacher };
+                        var c = new TTable { IdLesson = item.IdLesson, IdWeekDay = item.IdWeekDay, IdOffice = item.IdOffice, IdDisciplineGroupTeacher = item.IdDisciplineGroupTeacher };
                         
-                        await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable", a);
+                        await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable", c);
                     }
                 }
                 return true;
             }
             catch (Exception)
             {
+                var ff = f;
+                if (ff != null) {
+                    throw;
+                }
                 throw;
             }
         }
