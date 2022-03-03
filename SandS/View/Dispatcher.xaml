@@ -40,49 +40,7 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <ProgressBar
-                        Width="50"
-                        Height="49"
-                        Margin="339,191,339,193"
-                        HorizontalAlignment="Stretch"
-                        IsIndeterminate="True"
-                        RenderTransformOrigin="0.5,0.5"
-                        Style="{StaticResource MaterialDesignCircularProgressBar}"
-                        Visibility="{Binding Loading, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Value="0">
-                        <ProgressBar.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                                <SkewTransform />
-                                <RotateTransform />
-                                <TranslateTransform />
-                            </TransformGroup>
-                        </ProgressBar.RenderTransform>
-                    </ProgressBar>
-                    <Button
-                        x:Name="ImportButton"
-                        Width="266"
-                        Height="55"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Command="{Binding ImportCommand}"
-                        Visibility="{Binding ImportByttunIsEnable, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Grid Width="211" Height="55">
-                            <TextBlock
-                                Width="136"
-                                Margin="0,19"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Text="Выбрать файл" />
-                            <materialDesign:PackIcon
-                                Width="40"
-                                Height="35"
-                                Margin="27,7,0,13"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Kind="Folder" />
-                        </Grid>
-                    </Button>
+                    <View:ImportView Width="Auto" Height="Auto" />
                 </Grid>
             </TabItem>
             <TabItem>
@@ -100,82 +58,15 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <ComboBox
-                        x:Name="DepartmentCombobox"
-                        Height="49"
-                        Margin="10,44,9.8,0"
-                        VerticalAlignment="Top"
-                        materialDesign:HintAssist.Hint="Отделение"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="IdDepartment"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <ComboBox
-                        x:Name="GroupCombobox"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,44,9.6,0"
-                        VerticalAlignment="Top"
-                        materialDesign:HintAssist.Hint="Группа"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        DisplayMemberPath="Name"
-                        SelectedValuePath="IdGroup"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <ComboBox
-                        x:Name="LessonCombobox"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,118,9.6,0"
-                        VerticalAlignment="Top"
-                        materialDesign:HintAssist.Hint="Пара"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        DisplayMemberPath="LessonNumber"
-                        SelectedValuePath="IdLesson"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <ComboBox
-                        x:Name="DisciplineCombobox"
-                        Height="49"
-                        Margin="10,191,9.8,0"
-                        VerticalAlignment="Top"
-                        materialDesign:HintAssist.Hint="Предмет"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        DisplayMemberPath="GetDisciplineGroupTeacher.Discipline.Name"
-                        IsEnabled="False"
-                        SelectedValuePath="IdDisciplineGroupTeacher"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <DatePicker
-                        x:Name="DateBox"
-                        Height="49"
-                        Margin="10,118,9.8,0"
-                        VerticalAlignment="Top"
-                        materialDesign:HintAssist.Hint="Дата"
-                        FirstDayOfWeek="Monday"
-                        IsTodayHighlighted="True"
-                        Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
-                    <Button
-                        x:Name="AddButton"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,0,9.6,113"
-                        VerticalAlignment="Bottom"
-                        Content="Добавить"
-                        IsEnabled="False" />
-                    <ComboBox
-                        x:Name="OfficeCombobox"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,191,9.6,0"
-                        VerticalAlignment="Top"
-                        materialDesign:HintAssist.Hint="Кабинет"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        DisplayMemberPath="OfficeNumber"
-                        IsEnabled="False"
-                        SelectedValuePath="IdOffice"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="51*" />
+                        <RowDefinition Height="433*" />
+                    </Grid.RowDefinitions>
+                    <View:CreateShudule
+                        x:Name="PickGroupPanel"
+                        Grid.RowSpan="2"
+                        Width="Auto"
+                        Height="Auto" />
                 </Grid>
             </TabItem>
             <TabItem>
@@ -270,9 +161,10 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             Click="ExitButton_Click"
+            Cursor="Hand"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
             Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-            ToolTip="MaterialDesignFloatingActionDarkButton" Cursor="Hand">
+            ToolTip="MaterialDesignFloatingActionDarkButton">
             <materialDesign:PackIcon
                 Width="22"
                 Height="20"
