@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SandS.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace SandS.View
         public CreateShudule()
         {
             InitializeComponent();
+            DataContext = new CreateShuduleVM();
         }
     }
 }

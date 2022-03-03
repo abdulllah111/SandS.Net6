@@ -2,6 +2,7 @@
 using SandS.Resource;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,5 +25,13 @@ namespace SandS.Services
             new SyncApiData<Office>($"{GloabalValues.ApiBaseUrl}office/name", new Office { OfficeNumber = name }).Post();
         public static Department GetDepartmentByName(string name) =>
             new SyncApiData<Department>($"{GloabalValues.ApiBaseUrl}department", new Department { Name = name }).Post();
+        public static ObservableCollection<TTable> GetTTable() =>
+            new SyncApiData<ObservableCollection<TTable>>($"{GloabalValues.ApiBaseUrl}ttable/fullinfo").Get();
+        public static ObservableCollection<SubTTable> GetSubTTable() =>
+            new SyncApiData<ObservableCollection<SubTTable>>($"{GloabalValues.ApiBaseUrl}subttable/fullinfo").Get();
+        public static ObservableCollection<Office> GetOffice() =>
+            new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
+        public static ObservableCollection<DisciplineGroupTeacher> GetDgtForGroup(int id) =>
+            new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt/getforgroup/{id}").Get();
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,17 +15,25 @@ namespace SandS.ViewModel
     internal class CreateShuduleVM : ViewModelBase
     {
         public TaskCompletion<ObservableCollection<Group>> Groups { get; set; }
+        public TaskCompletion<ObservableCollection<Lesson>> Lessons { get; set; }
         public TaskCompletion<ObservableCollection<Department>> Departments { get; set; }
+        public ObservableCollection<TTable> Disciplines { get; set; }
+        public ObservableCollection<Office> Offices { get; set; }
         public Department SelectedDepartment { get; set; }
         public Group SelectedGroup { get; set; }
+        public DateTime SelectedDate { get; set; }
+        public Lesson SelectedLesson { get; set; }
+        public bool DepartmentsIsEnabled { get; set; }
+        public bool DateIsEnabled { get; set; }
+        public bool LessonsIsEnabled { get; set; }
         public bool GroupsIsEnabled { get; set; }
         public bool DisciplinesIsEnabled { get; set; }
         public bool OfficesIsEnabled { get; set; }
+        public bool AddButtonIsEnabled { get; set; }
+        public bool Loading { get; set; }
         public CreateShuduleVM()
         {
-            GroupsIsEnabled = false;
-            DisciplinesIsEnabled = false;
-            OfficesIsEnabled = false;
+            
         }
         public DelegateCommand LoadedCommand
         {
@@ -33,6 +42,15 @@ namespace SandS.ViewModel
                 return new DelegateCommand(() =>
                 {
                     Departments = AsyncGetApiData.GetDepartments();
+                    Lessons = AsyncGetApiData.GetLessons();
+                    Loading = false;
+                    GroupsIsEnabled = false;
+                    DisciplinesIsEnabled = false;
+                    AddButtonIsEnabled = false;
+                    OfficesIsEnabled = false;
+                    DepartmentsIsEnabled = true;
+                    DateIsEnabled = true;
+                    LessonsIsEnabled = true;
                 });
             }
         }
@@ -54,87 +72,114 @@ namespace SandS.ViewModel
                 });
             }
         }
-        //private async Task<bool> ShowFreeDisciplies()
-        //{
+        public DelegateCommand ValuesSelectedChangedCommand
+        {
+            get
+            {
+                return new DelegateCommand(async () =>
+                {
+                    DisciplinesIsEnabled = false;
+                    OfficesIsEnabled = false;
+                    if (SelectedGroup == null || SelectedDate.Date == default || SelectedLesson == null) { return; }
+                    Loading = true;
+                    DepartmentsIsEnabled = false;
+                    GroupsIsEnabled = false;
+                    DateIsEnabled = false;
+                    LessonsIsEnabled = false;
+                    AddButtonIsEnabled = false;
+                    await Task.Run(ShowFreeDisciplies).ContinueWith(_ => { 
+                        Loading = false; 
+                        DisciplinesIsEnabled = true;
+                        OfficesIsEnabled = true;
+                        DepartmentsIsEnabled = true;
+                        GroupsIsEnabled = true;
+                        DateIsEnabled = true;
+                        LessonsIsEnabled = true;
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                });
+            }
+        }
+        private async Task<bool> ShowFreeDisciplies()
+        {
+            var client = new HttpClient();
+            await client.GetAsync($"{GloabalValues.ApiBaseUrl}teacher");
+            var TTablesInDb = SyncGetApiData.GetTTable();
+            var subTTablesInDb = SyncGetApiData.GetSubTTable().ToList();
+            var AllOfficesInDb = SyncGetApiData.GetOffice().ToList();
+            var DayOfWeek = (int)SelectedDate.DayOfWeek;
 
-        //    var TTablesInDb = AsyncGetApiData.GetTTables();
-        //    var dgtforgroup = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt/getforgroup/").Get();
-        //    var subTTablesInDb = AsyncGetApiData.GetSubTtables();
-        //    var AllOfficesInDb = AsyncGetApiData.GetOffices();
+            //Все дисциплины у данной группы
+            var dgtforgroup = SyncGetApiData.GetDgtForGroup(SelectedGroup.IdGroup);
 
-        //    //Все дисциплины у данной группы
+            //Получаем все дисциплины, которые ведут преподаватели данной группы
+            var AllDusciplinesInTTable = TTablesInDb.Where(x => dgtforgroup.Any(x2 => x.GetDisciplineGroupTeacher.IdTeacher == x2.IdTeacher)).ToList();
 
-        //    var DayOfWeek = (int)DateBox.SelectedDate.Value.DayOfWeek;
-        //    //Получаем все дисциплины, которые ведут преподаватели данной группы
-        //    var AllDusciplinesInTTable = TTablesInDb.Result
-        //        .Where(x => dgtforgroup.Any(x2 => x.GetDisciplineGroupTeacher().IdTeacher == x2.IdTeacher)).ToList();
+            //Получем все дисциплины из замен, которые ведут преподаватели данной группы
+            var AllDisciplineInSubTTable = subTTablesInDb != null
+                ? subTTablesInDb
+                    .Where(x => dgtforgroup.Any(x2 => x.GetDisciplineGroupTeacher.IdTeacher == x2.IdTeacher)).ToList()
+                : null;
 
-        //    //Получем все дисциплины из замен, которые ведут преподаватели данной группы
-        //    var AllDisciplineInSubTTable = subTTablesInDb != null
-        //        ? subTTablesInDb
-        //            .Where(x => dgtforgroup.Any(x2 => x.GetDisciplineGroupTeacher().Result.IdTeacher == x2.IdTeacher)).ToList()
-        //        : null;
+            //Получем препродавателей, которые не доступны на указанную пару и день недели
+            var NoAvailableTeachers = AllDusciplinesInTTable.Where(x => x.IdLesson == SelectedLesson.IdLesson
+                                                                        && x.IdWeekDay == DayOfWeek).ToList();
 
-        //    //Получем препродавателей, которые не доступны на указанную пару и день недели
-        //    var NoAvailableTeachers = AllDusciplinesInTTable.Where(x => x.IdLesson == (int)LessonCombobox.SelectedValue
-        //                                                                && x.IdWeekDay == DayOfWeek).ToList();
+            //Удалить из недоступных преподавтелей тех, которые своболны из-за замен
+            if (AllDisciplineInSubTTable != null)
+                NoAvailableTeachers.RemoveAll(x => AllDisciplineInSubTTable
+                    .Any(x2 => x.IdLesson == x2.IdLesson && x.IdWeekDay == x2.IdWeekDay &&
+                               x.GetDisciplineGroupTeacher.IdGroup == x2.GetDisciplineGroupTeacher.IdGroup));
 
-        //    //Удалить из недоступных преподавтелей тех, которые своболны из-за замен
-        //    if (AllDisciplineInSubTTable != null)
-        //        NoAvailableTeachers.RemoveAll(x => AllDisciplineInSubTTable
-        //            .Any(x2 => x.IdLesson == x2.IdLesson && x.IdWeekDay == x2.IdWeekDay &&
-        //                       x.GetDisciplineGroupTeacher().IdGroup == x2.GetDisciplineGroupTeacher().Result.IdGroup));
+            //Удаляем всех недоступных преподавателей по расписанию
+            AllDusciplinesInTTable.RemoveAll(x => NoAvailableTeachers.Any(x2 =>
+                x.GetDisciplineGroupTeacher.IdTeacher == x2.GetDisciplineGroupTeacher.IdTeacher));
 
-        //    //Удаляем всех недоступных преподавателей по расписанию
-        //    AllDusciplinesInTTable.RemoveAll(x => NoAvailableTeachers.Any(x2 =>
-        //        x.GetDisciplineGroupTeacher().IdTeacher == x2.GetDisciplineGroupTeacher().IdTeacher));
+            //Получаем недоступных преподавателей на текущий день недели и пару по заменам
+            var NoAvailableTeachersInSubTTable = AllDisciplineInSubTTable != null
+                ? AllDisciplineInSubTTable.Where(x => x.IdLesson == SelectedLesson.IdLesson
+                                                      && x.Date == SelectedDate.DateStr()).ToList()
+                : null;
 
-        //    //Получаем недоступных преподавателей на текущий день недели и пару по заменам
-        //    var NoAvailableTeachersInSubTTable = AllDisciplineInSubTTable != null
-        //        ? AllDisciplineInSubTTable.Where(x => x.IdLesson == (int)LessonCombobox.SelectedValue
-        //                                              && x.Date == DateBox.SelectedDate.Value).ToList()
-        //        : null;
+            //Удаляем всех недоаступных преподавателей по заменам
+            if (NoAvailableTeachersInSubTTable != null)
+                AllDusciplinesInTTable.RemoveAll(x => NoAvailableTeachersInSubTTable.Any(x2 =>
+                    x.GetDisciplineGroupTeacher.IdTeacher == x2.GetDisciplineGroupTeacher.IdTeacher));
 
-        //    //Удаляем всех недоаступных преподавателей по заменам
-        //    if (NoAvailableTeachersInSubTTable != null)
-        //        AllDusciplinesInTTable.RemoveAll(x => NoAvailableTeachersInSubTTable.Any(x2 =>
-        //            x.GetDisciplineGroupTeacher().IdTeacher == x2.GetDisciplineGroupTeacher().Result.IdTeacher));
+            //Получем все доступные для замены предметы для данной группы
+            var AvailableDisciplinesForGroup = AllDusciplinesInTTable.Where(x =>
+                x.GetDisciplineGroupTeacher.IdGroup == SelectedGroup.IdGroup);
 
-        //    //Получем все доступные для замены предметы для данной группы
-        //    var AvailableDisciplinesForGroup = AllDusciplinesInTTable.Where(x =>
-        //        x.GetDisciplineGroupTeacher().IdGroup == (int)GroupCombobox.SelectedValue);
+            //Полуаем недоступные кабинеты по расписанию
+            var NoAvailableOfficesInTtable = TTablesInDb != null
+                ? TTablesInDb.Where(x => x.IdWeekDay == DayOfWeek
+                                         && x.IdLesson == SelectedLesson.IdLesson)
+                : null;
 
-        //    //Полуаем недоступные кабинеты по расписанию
-        //    var NoAvailableOfficesInTtable = TTablesInDb != null
-        //        ? TTablesInDb.GetAwaiter().GetResult().Where(x => x.IdWeekDay == (int)DateBox.SelectedDate.Value.DayOfWeek
-        //                                 && x.IdLesson == (int)LessonCombobox.SelectedValue)
-        //        : null;
+            //Получаем недоступные кабинеты по заменам
+            var NoAvailableOfficesInSubTTable = subTTablesInDb != null
+                ? subTTablesInDb.Where(x => x.IdWeekDay == DayOfWeek
+                                            && x.IdLesson == SelectedLesson.IdLesson)
+                : null;
 
-        //    //Получаем недоступные кабинеты по заменам
-        //    var NoAvailableOfficesInSubTTable = subTTablesInDb != null
-        //        ? subTTablesInDb.Where(x => x.IdWeekDay == (int)DateBox.SelectedDate.Value.DayOfWeek
-        //                                    && x.IdLesson == (int)LessonCombobox.SelectedValue)
-        //        : null;
+            var f = "";
+            foreach (var item in NoAvailableOfficesInTtable) f += $"{item.Office.OfficeNumber}\n\r";
+            var h = "";
+            foreach (var item in NoAvailableTeachersInSubTTable) h += $"{item.Office.OfficeNumber}\n\r";
 
-        //    var f = "";
-        //    foreach (var item in NoAvailableOfficesInTtable) f += $"{item.Office.OfficeNumber}\n\r";
-        //    var h = "";
-        //    foreach (var item in NoAvailableTeachersInSubTTable) h += $"{item.Office.OfficeNumber}\n\r";
+            if (NoAvailableOfficesInTtable != null)
+                AllOfficesInDb.RemoveAll(x => NoAvailableOfficesInTtable.Any(x2 => x2.IdOffice == x.IdOffice));
+            if (NoAvailableOfficesInSubTTable != null)
+                AllOfficesInDb.RemoveAll(x => NoAvailableOfficesInSubTTable.Any(x2 => x2.IdOffice == x.IdOffice));
 
-        //    if (NoAvailableOfficesInTtable != null)
-        //        AllOfficesInDb.RemoveAll(x => NoAvailableOfficesInTtable.Any(x2 => x2.IdOffice == x.IdOffice));
-        //    if (NoAvailableOfficesInSubTTable != null)
-        //        AllOfficesInDb.RemoveAll(x => NoAvailableOfficesInSubTTable.Any(x2 => x2.IdOffice == x.IdOffice));
+            var AvailableOffices = AllOfficesInDb;
 
-        //    var AvailableOffices = AllOfficesInDb;
-
-        //    AvailableOffices = AvailableOffices.GroupBy(x => x.IdOffice).Select(x => x.First()).ToList();
-        //    AvailableDisciplinesForGroup = AvailableDisciplinesForGroup
-        //        .GroupBy(x => x.GetDisciplineGroupTeacher().IdDiscipline).Select(x => x.First()).ToList();
-        //    DisciplineCombobox.IsEnabled = true;
-        //    OfficeCombobox.IsEnabled = true;
-        //    DisciplineCombobox.ItemsSource = AvailableDisciplinesForGroup;
-        //    OfficeCombobox.ItemsSource = AvailableOffices;
-        //}
+            AvailableOffices = AvailableOffices.GroupBy(x => x.IdOffice).Select(x => x.First()).ToList();
+            AvailableDisciplinesForGroup = AvailableDisciplinesForGroup
+                .GroupBy(x => x.GetDisciplineGroupTeacher.IdDiscipline).Select(x => x.First()).ToList();
+            
+            Disciplines = new ObservableCollection<TTable>(AvailableDisciplinesForGroup.ToList());
+            Offices = new ObservableCollection<Office>(AvailableOffices);
+            return true;
+        }
     }
 }
