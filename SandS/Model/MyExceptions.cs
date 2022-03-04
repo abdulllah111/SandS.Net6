@@ -7,7 +7,8 @@ namespace SandS.Model
         public static string DateStr(this DateTime date)
         {
             var day = (date.Day <= 9) ? $"0{date.Day}" : date.Day.ToString();
-            return $"{date.Year.ToString()}-{date.Month.ToString()}-{day}";
+            var month = (date.Month <= 9) ? $"0{date.Month}" : date.Month.ToString();
+            return $"{date.Year.ToString()}-{month}-{day}";
         }
 
         public static string GetTime(this DateTime date)

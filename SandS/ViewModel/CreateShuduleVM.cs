@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,9 @@ namespace SandS.ViewModel
         public ObservableCollection<TTable> Disciplines { get; set; }
         public ObservableCollection<Office> Offices { get; set; }
         public Department SelectedDepartment { get; set; }
+        public TTable SelectedDiscipline { get; set; }
         public Group SelectedGroup { get; set; }
+        public Office SelectedOffice { get; set; }
         public DateTime SelectedDate { get; set; }
         public Lesson SelectedLesson { get; set; }
         public bool DepartmentsIsEnabled { get; set; }
@@ -31,6 +34,7 @@ namespace SandS.ViewModel
         public bool OfficesIsEnabled { get; set; }
         public bool AddButtonIsEnabled { get; set; }
         public bool Loading { get; set; }
+        public string Result { get; set; }
         public CreateShuduleVM()
         {
             
@@ -72,7 +76,7 @@ namespace SandS.ViewModel
                 });
             }
         }
-        public DelegateCommand ValuesSelectedChangedCommand
+        public DelegateCommand SeartchValuesSelectedChangedCommand
         {
             get
             {
@@ -89,6 +93,47 @@ namespace SandS.ViewModel
                     AddButtonIsEnabled = false;
                     await Task.Run(ShowFreeDisciplies).ContinueWith(_ => { 
                         Loading = false; 
+                        DisciplinesIsEnabled = true;
+                        OfficesIsEnabled = true;
+                        DepartmentsIsEnabled = true;
+                        GroupsIsEnabled = true;
+                        DateIsEnabled = true;
+                        LessonsIsEnabled = true;
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                });
+            }
+        }
+        public DelegateCommand SelectedValuesSelectedChangedCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    if(SelectedDiscipline == null || SelectedOffice == null) { AddButtonIsEnabled = false; return; }
+                    AddButtonIsEnabled = true;
+                });
+            }
+        }
+        public DelegateCommand AddButtonCommand
+        {
+            get
+            {
+                return new DelegateCommand(async () =>
+                {
+                    ObservableCollection<SubTTable> allSubTTable = SyncGetApiData.GetSubTTable();
+                    string date = SelectedDate.DateStr();
+                    bool a = allSubTTable.Any(x => x.GetDisciplineGroupTeacher.IdGroup == SelectedDiscipline.GetDisciplineGroupTeacher.IdGroup && x.Date == date);
+                    if(a) { Result = "Замена существует"; return; }
+                    Loading = true;
+                    DisciplinesIsEnabled = false;
+                    OfficesIsEnabled = false;
+                    DepartmentsIsEnabled = false;
+                    GroupsIsEnabled = false;
+                    DateIsEnabled = false;
+                    LessonsIsEnabled = false;
+                    AddButtonIsEnabled = false;
+                    await Task.Run(AddSubTTable).ContinueWith(_ => {
+                        Loading = false;
                         DisciplinesIsEnabled = true;
                         OfficesIsEnabled = true;
                         DepartmentsIsEnabled = true;
@@ -180,6 +225,20 @@ namespace SandS.ViewModel
             Disciplines = new ObservableCollection<TTable>(AvailableDisciplinesForGroup.ToList());
             Offices = new ObservableCollection<Office>(AvailableOffices);
             return true;
+        }
+        private async Task<bool> AddSubTTable()
+        {
+            try
+            {
+                var client = new HttpClient();
+                var c = new SubTTable { IdLesson = SelectedLesson.IdLesson, IdWeekDay = (int)SelectedDate.DayOfWeek, IdOffice = SelectedOffice.IdOffice, IdDisciplineGroupTeacher = SelectedDiscipline.IdDisciplineGroupTeacher, Date = SelectedDate.DateStr() };
+                await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}subttable", c);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

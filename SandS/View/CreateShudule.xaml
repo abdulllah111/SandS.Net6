@@ -84,7 +84,7 @@
             Style="{StaticResource MaterialDesignOutlinedComboBox}">
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand
-                    Command="{Binding ValuesSelectedChangedCommand}"
+                    Command="{Binding SeartchValuesSelectedChangedCommand}"
                     EventName="SelectionChanged"
                     ProcessEventsFromDisabledEventOwner="False" />
             </dxmvvm:Interaction.Behaviors>
@@ -99,8 +99,16 @@
             DisplayMemberPath="GetDisciplineGroupTeacher.Discipline.Name"
             IsEnabled="{Binding DisciplinesIsEnabled}"
             ItemsSource="{Binding Disciplines}"
+            SelectedItem="{Binding SelectedDiscipline}"
             SelectedValuePath="IdDisciplineGroupTeacher"
-            Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+            Style="{StaticResource MaterialDesignOutlinedComboBox}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand
+                    Command="{Binding SelectedValuesSelectedChangedCommand}"
+                    EventName="SelectionChanged"
+                    ProcessEventsFromDisabledEventOwner="False" />
+            </dxmvvm:Interaction.Behaviors>
+        </ComboBox>
         <DatePicker
             x:Name="DateBox"
             Height="49"
@@ -125,7 +133,9 @@
             Height="49"
             Margin="10.2,0,9.6,113"
             VerticalAlignment="Bottom"
+            Command="{Binding AddButtonCommand}"
             Content="Добавить"
+            Cursor="Hand"
             IsEnabled="{Binding AddButtonIsEnabled}" />
         <ComboBox
             x:Name="OfficeCombobox"
@@ -138,8 +148,16 @@
             DisplayMemberPath="OfficeNumber"
             IsEnabled="{Binding OfficesIsEnabled}"
             ItemsSource="{Binding Offices}"
+            SelectedItem="{Binding SelectedOffice}"
             SelectedValuePath="IdOffice"
-            Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+            Style="{StaticResource MaterialDesignOutlinedComboBox}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand
+                    Command="{Binding SelectedValuesSelectedChangedCommand}"
+                    EventName="SelectionChanged"
+                    ProcessEventsFromDisabledEventOwner="False" />
+            </dxmvvm:Interaction.Behaviors>
+        </ComboBox>
         <ProgressBar
             Grid.Column="1"
             Width="50"
