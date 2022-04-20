@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApiBaseUrl" xml:space="preserve">
-    <value>http://localhost/api/</value>
+    <value>https://abdul-arabp.site/restapi/public/api/</value>
+  </data>
+  <data name="ApiToken" xml:space="preserve">
+    <value>120a9dsaioAbdulArabp210oweirk</value>
   </data>
 </root>

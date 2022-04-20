@@ -1,106 +1,137 @@
-﻿<Window x:Class="SandS.Login"
+﻿<Window
+    x:Class="SandS.Login"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    mc:Ignorable="d" 
-    Title="Авторизация студента" Height="500" Width="500" MinWidth="500" MinHeight="500" MaxWidth="500" MaxHeight="500" ShowInTaskbar="True" WindowStartupLocation="CenterScreen">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Авторизация студента"
+    Width="500"
+    Height="500"
+    MinWidth="500"
+    MinHeight="500"
+    MaxWidth="500"
+    MaxHeight="500"
+    ShowInTaskbar="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
     <Window.Resources>
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
     </Window.Resources>
 
     <Grid>
-        <TabControl TabStripPlacement="Bottom"
-                                Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
-                                materialDesign:ColorZoneAssist.Mode="PrimaryLight"
-                                materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
-                                materialDesign:NavigationRailAssist.SelectionCornerRadius="50"
-                                HorizontalContentAlignment="Center">
+        <TabControl
+            HorizontalContentAlignment="Center"
+            materialDesign:ColorZoneAssist.Mode="PrimaryLight"
+            materialDesign:NavigationRailAssist.SelectionCornerRadius="50"
+            materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
+            Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+            TabStripPlacement="Bottom">
 
             <TabItem Margin="4">
                 <TabItem.Header>
-                    <StackPanel Height="auto" Width="auto">
-                        <materialDesign:PackIcon Kind="AccountTie" Width="40" Height="40" HorizontalAlignment="Center"/>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="40"
+                            Height="40"
+                            HorizontalAlignment="Center"
+                            Kind="AccountTie" />
                     </StackPanel>
                 </TabItem.Header>
                 <Grid GotFocus="Grid_GotFocus_1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Grid Margin="123,0.4,0.4,97.4" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                        <Button x:Name="LoginStudentButton" Content="Войти" Margin="9.8,0,10.4,9.8" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="1" Click="LoginStudentButton_Click"/>
+                    <Grid
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="2"
+                        Margin="123,0.4,0.4,97.4">
+                        <Button
+                            x:Name="LoginStudentButton"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="9.8,0,10.4,9.8"
+                            VerticalAlignment="Bottom"
+                            Click="LoginStudentButton_Click"
+                            Content="Войти" />
                         <TextBox
-  
-  materialDesign:HintAssist.Hint="Логин"
-  Grid.Column="1" Margin="9.8,10.4,10.4,0" Grid.Row="1" VerticalAlignment="Top" Height="25" IsEnabled="False">
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Height="25"
+                            Margin="9.8,10.4,10.4,0"
+                            VerticalAlignment="Top"
+                            materialDesign:HintAssist.Hint="Логин"
+                            IsEnabled="False">
                             <TextBox.Text>
-                                <Binding
-      Path="Name"
-      UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-
-                                    </Binding.ValidationRules>
+                                <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules />
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
                         <PasswordBox
-  
-  materialDesign:HintAssist.Hint="Пароль"
-  materialDesign:TextFieldAssist.HasClearButton="True"
-  Margin="9.8,75.4,10.4,94.8" Grid.Column="1" Grid.Row="1" Height="25" VerticalAlignment="Bottom" IsEnabled="False"/>
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Height="25"
+                            Margin="9.8,75.4,10.4,94.8"
+                            VerticalAlignment="Bottom"
+                            materialDesign:HintAssist.Hint="Пароль"
+                            materialDesign:TextFieldAssist.HasClearButton="True"
+                            IsEnabled="False" />
                     </Grid>
                 </Grid>
             </TabItem>
 
-            <TabItem Margin="4" >
+            <TabItem Margin="4">
                 <TabItem.Header>
-                    <StackPanel Height="auto" Width="auto">
-                        <materialDesign:PackIcon Kind="AccountCogOutline" Width="40" Height="40" HorizontalAlignment="Center"/>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="40"
+                            Height="40"
+                            HorizontalAlignment="Center"
+                            Kind="AccountCogOutline" />
                     </StackPanel>
                 </TabItem.Header>
                 <Grid GotFocus="Grid_GotFocus">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Grid Margin="123,0.4,0.4,97.4" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                        <Button x:Name="LoginDispatcherButton" Content="Войти" Margin="9.8,0,10.4,9.8" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="1" Click="LoginDispatcherButton_Click"/>
-                        <TextBox MaxLength="30" x:Name="LoginTextBox"
-  
-  materialDesign:HintAssist.Hint="Логин"
-  Grid.Column="1" Margin="9.8,10.4,10.4,0" Grid.Row="1" VerticalAlignment="Top" Height="25">
-                            <TextBox.Text>
-                                <Binding
-      Path="Name"
-      UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <PasswordBox MaxLength="30" x:Name="PasswordTextBox"
-  
-  materialDesign:HintAssist.Hint="Пароль"
-  materialDesign:TextFieldAssist.HasClearButton="True"
-  Margin="9.8,75.4,10.4,94.8" Grid.Column="1" Grid.Row="1" Height="25" VerticalAlignment="Bottom"/>
+                    <Grid
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="2"
+                        Margin="123,0.4,0.4,97.4">
+                        <Button
+                            x:Name="LoginDispatcherButton"
+                            Margin="10,121,10,0"
+                            VerticalAlignment="Top"
+                            Click="LoginDispatcherButton_Click"
+                            Content="Войти" />
+                        <TextBox
+                            x:Name="ApiTokenTextbox"
+                            Height="25"
+                            Margin="10,39,11,0"
+                            VerticalAlignment="Top"
+                            materialDesign:HintAssist.Hint="API-токен"
+                            materialDesign:TextFieldAssist.HasClearButton="True"
+                            MaxLength="30" />
                     </Grid>
                 </Grid>
             </TabItem>

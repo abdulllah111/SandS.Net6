@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SandS.Resource;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -13,7 +14,7 @@ namespace SandS.Services
         private static HttpClient cl = new HttpClient();
         private static async Task<T> get(string url)
         {
-            var streamTask = cl.GetStreamAsync(url);
+            var streamTask = cl.GetStreamAsync($"{GloabalValues.ApiBaseUrl}{url}");
             var data = await JsonSerializer.DeserializeAsync<T>(await streamTask);
             return data;
         }

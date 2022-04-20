@@ -61,11 +61,20 @@ namespace SandS.Resource {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на http://localhost/api/.
+        ///   Ищет локализованную строку, похожую на https://abdul-arabp.site/restapi/public/api/.
         /// </summary>
         public static string ApiBaseUrl {
             get {
                 return ResourceManager.GetString("ApiBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 120a9dsaioAbdulArabp210oweirk.
+        /// </summary>
+        public static string ApiToken {
+            get {
+                return ResourceManager.GetString("ApiToken", resourceCulture);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SandS.Resource;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,23 +19,36 @@ namespace SandS.Services
         private static object _model = null!;
         public SyncApiData(string url)
         {
-            _url = url;
+            _url = $"{GloabalValues.ApiBaseUrl}{url}?api_token={GloabalValues.ApiToken}";
         }
         public SyncApiData(string url, object model)
         {
-            _url = url;
+            _url = $"{GloabalValues.ApiBaseUrl}{url}?api_token={GloabalValues.ApiToken}";
             _model = model;
         }
         public T Get()
         {
-            var stream = Task.Run(get).Result;
-            var data = JsonSerializer.Deserialize<T>(stream);
-            return data;
+            try
+            {
+                var stream = Task.Run(get).Result;
+                var data = JsonSerializer.Deserialize<T>(stream);
+                return data;
+            }
+            catch
+            {
+                return default(T);
+            }
         }
 
         public T Post()
         {
             var stream = Task.Run(post).Result;
+            var data = JsonSerializer.Deserialize<T>(stream);
+            return data;
+        }
+        public T Delete()
+        {
+            var stream = Task.Run(delete).Result;
             var data = JsonSerializer.Deserialize<T>(stream);
             return data;
         }
@@ -46,6 +60,11 @@ namespace SandS.Services
         private static async Task<Stream> post()
         {
             var streamTask = await cl.PostAsJsonAsync(_url, _model);
+            return await streamTask.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        }
+        private static async Task<Stream> delete()
+        {
+            var streamTask = await cl.DeleteAsync(_url);
             return await streamTask.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
     }

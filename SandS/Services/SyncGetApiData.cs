@@ -12,26 +12,26 @@ namespace SandS.Services
     internal static class SyncGetApiData
     {
         public static Group GetGroupByName(string name) => 
-            new SyncApiData<Group>($"{GloabalValues.ApiBaseUrl}group/name", new Group { Name = name}).Post();
+            new SyncApiData<Group>($"group/name", new Group { Name = name}).Post();
         public static Discipline GetDisciplineByName(string name) => 
-            new SyncApiData<Discipline>($"{GloabalValues.ApiBaseUrl}discipline/name", new Discipline { Name = name}).Post();
+            new SyncApiData<Discipline>($"discipline/name", new Discipline { Name = name}).Post();
         public static Teacher GetTeacherByName(string name) => 
-            new SyncApiData<Teacher>($"{GloabalValues.ApiBaseUrl}teacher/name", new Teacher { Name = name }).Post();
+            new SyncApiData<Teacher>($"teacher/name", new Teacher { Name = name }).Post();
         public static WeekDay GetWeekDayByName(string name) => 
-            new SyncApiData<WeekDay>($"{GloabalValues.ApiBaseUrl}weekday/name", new WeekDay { Name = name }).Post();
+            new SyncApiData<WeekDay>($"weekday/name", new WeekDay { Name = name }).Post();
         public static Lesson GetLessonByName(string name) => 
-            new SyncApiData<Lesson>($"{GloabalValues.ApiBaseUrl}lesson/name", new Lesson { LessonNumber = name }).Post();
+            new SyncApiData<Lesson>($"lesson/name", new Lesson { LessonNumber = name }).Post();
         public static Office GetOfficeByName(string name) => 
-            new SyncApiData<Office>($"{GloabalValues.ApiBaseUrl}office/name", new Office { OfficeNumber = name }).Post();
+            new SyncApiData<Office>($"office/name", new Office { OfficeNumber = name }).Post();
         public static Department GetDepartmentByName(string name) =>
-            new SyncApiData<Department>($"{GloabalValues.ApiBaseUrl}department", new Department { Name = name }).Post();
+            new SyncApiData<Department>($"department", new Department { Name = name }).Post();
         public static ObservableCollection<TTable> GetTTable() =>
-            new SyncApiData<ObservableCollection<TTable>>($"{GloabalValues.ApiBaseUrl}ttable/fullinfo").Get();
+            new SyncApiData<ObservableCollection<TTable>>($"ttable/fullinfo").Get();
         public static ObservableCollection<SubTTable> GetSubTTable() =>
-            new SyncApiData<ObservableCollection<SubTTable>>($"{GloabalValues.ApiBaseUrl}subttable/fullinfo").Get();
+            new SyncApiData<ObservableCollection<SubTTable>>($"subttable/fullinfo").Get();
         public static ObservableCollection<Office> GetOffice() =>
-            new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
+            new SyncApiData<ObservableCollection<Office>>($"office").Get();
         public static ObservableCollection<DisciplineGroupTeacher> GetDgtForGroup(int id) =>
-            new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt/getforgroup/{id}").Get();
+            new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"dgt/getforgroup/{id}").Get();
     }
 }

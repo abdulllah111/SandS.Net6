@@ -14,7 +14,7 @@ namespace SandS.Services
         {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri($"{GloabalValues.ApiBaseUrl}");
-            client.DeleteAsync(url);
+            client.DeleteAsync($"{url}?api_token={GloabalValues.ApiToken}");
         }
     }
 }

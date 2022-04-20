@@ -15,7 +15,7 @@ namespace SandS.Services
         {
             var client = new HttpClient();
             client.BaseAddress = new Uri($"{GloabalValues.ApiBaseUrl}");
-            await client.PostAsJsonAsync($"{url}", model);
+            await client.PostAsJsonAsync($"{url}?api_token={GloabalValues.ApiToken}", model);
         }
     }
 }

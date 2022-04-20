@@ -1,5 +1,9 @@
-﻿using System.ServiceProcess;
+﻿using System.Configuration;
+using System.ServiceProcess;
 using System.Windows;
+using SandS.Model;
+using SandS.Resource;
+using SandS.Services;
 using SandS.View;
 
 namespace SandS
@@ -12,7 +16,7 @@ namespace SandS
         public Login()
         {
             InitializeComponent();
-            
+            ApiTokenTextbox.Text = GloabalValues.ApiToken;
         }
 
         private void LoginStudentButton_Click(object sender, RoutedEventArgs e)
@@ -25,22 +29,14 @@ namespace SandS
 
         private void LoginDispatcherButton_Click(object sender, RoutedEventArgs e)
         {
-            /*DB.Open();
-            MySqlCommand cmd = new MySqlCommand($"SELECT * FROM `users` WHERE `login` = '{LoginTextBox.Text}' AND `password` = '{PasswordTextBox.Password}'", DB.GetCon);
-            MySqlDataReader dbReader = cmd.ExecuteReader();
-            if (dbReader.HasRows == false)
-            {
-                MessageBoxResult result = MessageBox.Show("Не правильный логин или пороль!", "Ошбика!");
-                return;
+            //TokenValidation? aunth_api = new SyncApiData<TokenValidation?>($"tokenvalid?api_token={ApiTokenTextbox.Text}").Get();
+            if(ApiTokenTextbox.Text == GloabalValues.ApiToken) {
+                Visibility = Visibility.Hidden;
+                var dispatcher = new Dispatcher();
+                dispatcher.Show();
+                Close();
             }
-            else
-            {
-                DB.Close();
-*/
-            Visibility = Visibility.Hidden;
-            var dispatcher = new Dispatcher();
-            dispatcher.Show();
-            Close();
+            
         }
 
         private void Grid_GotFocus(object sender, RoutedEventArgs e)

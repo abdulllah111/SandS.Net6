@@ -51,16 +51,16 @@ namespace SandS.ViewModel
                     {
                         ImportByttunIsEnable = false;
                         Loading = true;
-                        DepartmentInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
-                        GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"{GloabalValues.ApiBaseUrl}group").Get();
-                        DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"{GloabalValues.ApiBaseUrl}discipline").Get();
-                        TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"{GloabalValues.ApiBaseUrl}teacher").Get();
-                        OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"{GloabalValues.ApiBaseUrl}office").Get();
-                        LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"{GloabalValues.ApiBaseUrl}lesson").Get();
-                        WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"{GloabalValues.ApiBaseUrl}weekday").Get();
-                        DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>($"{GloabalValues.ApiBaseUrl}department").Get();
-                        TTablesInDb = new SyncApiData<ObservableCollection<TTable>>($"{GloabalValues.ApiBaseUrl}ttable").Get();
-                        DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
+                        DepartmentInDb = new SyncApiData<ObservableCollection<Department>>($"department").Get();
+                        GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"group").Get();
+                        DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"discipline").Get();
+                        TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"teacher").Get();
+                        OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"office").Get();
+                        LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"lesson").Get();
+                        WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"weekday").Get();
+                        DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>($"department").Get();
+                        TTablesInDb = new SyncApiData<ObservableCollection<TTable>>($"ttable").Get();
+                        DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"dgt").Get();
 
                         await Task.Run(ImportAsync).ContinueWith(_ => { Loading = false; ImportByttunIsEnable = true; }, TaskScheduler.FromCurrentSynchronizationContext());
                         //await ImportAsync();  
@@ -95,11 +95,21 @@ namespace SandS.ViewModel
                 var weekday = "";
 
                 var department = Path.GetFileNameWithoutExtension(expath);
-                Department? depname = DepartmentInDb.Where(x => x.Name == department).First();
+                Department? depname = DepartmentInDb.FirstOrDefault(x => x.Name == department);
                 if (depname != null)
                 {
-                    var delete = new AsyncDeleteApi();
-                    AsyncDeleteApi.Delete($"delete/{depname.IdDepartment}");
+                    var d = new SyncApiData<Message>($"delete/{depname.IdDepartment}").Delete();
+                    depname = SyncGetApiData.GetDepartmentByName(department);
+                    DepartmentInDb = new SyncApiData<ObservableCollection<Department>>($"department").Get();
+                    GroupsInDb = new SyncApiData<ObservableCollection<Group>>($"group").Get();
+                    DisciplinesInDb = new SyncApiData<ObservableCollection<Discipline>>($"discipline").Get();
+                    TeachersInDb = new SyncApiData<ObservableCollection<Teacher>>($"teacher").Get();
+                    OfficesInDb = new SyncApiData<ObservableCollection<Office>>($"office").Get();
+                    LessonIdDb = new SyncApiData<ObservableCollection<Lesson>>($"lesson").Get();
+                    WeekDaysInDb = new SyncApiData<ObservableCollection<WeekDay>>($"weekday").Get();
+                    DepartmentsInDb = new SyncApiData<ObservableCollection<Department>>($"department").Get();
+                    TTablesInDb = new SyncApiData<ObservableCollection<TTable>>($"ttable").Get();
+                    DisciplineGroupTeachersInDb = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"dgt").Get();
                 }
                 else
                 {
@@ -110,6 +120,7 @@ namespace SandS.ViewModel
                 {
                     DepartmentsInExcel.Add(new Department
                     {
+                        IdDepartment = depname.IdDepartment,
                         Name = department.Trim()
                     });
                     foreach (var worksheet in workbook.Worksheets)
@@ -121,7 +132,7 @@ namespace SandS.ViewModel
                                 GroupsInExcel.Add(new Group
                                 {
                                     Name = group.DeleteErrors(),
-                                    IdDepartment = depname.IdDepartment
+                                    IdDepartment = DepartmentsInExcel.First().IdDepartment
                                 });
                             for (var j = 3; j <= 85; j += 1)
                             {
@@ -141,6 +152,13 @@ namespace SandS.ViewModel
                                         {
                                             Name = teacher.DeleteErrors()
                                         });
+                                    else if (teacher == "")
+                                    {
+                                        TeachersInExcel.Add(new Teacher
+                                        {
+                                            Name = "Запас"
+                                        });
+                                    }
                                 }
 
                                 if (i - 2 == 1 || i - 6 == 1 || i - 10 == 1)
@@ -310,26 +328,26 @@ namespace SandS.ViewModel
 
                     foreach (var item in teachers)
                     {
-                        item.IdTeacher = item.IdTeacher == 0 ? new SyncApiData<Teacher>($"{GloabalValues.ApiBaseUrl}teacher", item).Post().IdTeacher : item.IdTeacher;
+                        item.IdTeacher = item.IdTeacher == 0 ? new SyncApiData<Teacher>($"teacher", item).Post().IdTeacher : item.IdTeacher;
                     }
                     foreach (var item in disciplines)
                     {
-                        item.IdDiscipline = item.IdDiscipline == 0 ? new SyncApiData<Discipline>($"{GloabalValues.ApiBaseUrl}discipline", item).Post().IdDiscipline : item.IdDiscipline;
+                        item.IdDiscipline = item.IdDiscipline == 0 ? new SyncApiData<Discipline>($"discipline", item).Post().IdDiscipline : item.IdDiscipline;
                     }
 
                     foreach (var item in offices)
                     {
-                        item.IdOffice = item.IdOffice == 0 ? new SyncApiData<Office>($"{GloabalValues.ApiBaseUrl}office", item).Post().IdOffice : item.IdOffice;
+                        item.IdOffice = item.IdOffice == 0 ? new SyncApiData<Office>($"office", item).Post().IdOffice : item.IdOffice;
                     }
 
                     foreach (var item in departments)
                     {
-                        item.IdDepartment = item.IdDepartment == 0 ? new SyncApiData<Department>($"{GloabalValues.ApiBaseUrl}department", item).Post().IdDepartment : item.IdDepartment;
+                        item.IdDepartment = item.IdDepartment == 0 ? new SyncApiData<Department>($"department", item).Post().IdDepartment : item.IdDepartment;
                     }
 
                     foreach (var item in groups)
                     {
-                        item.IdGroup = item.IdGroup == 0 ? new SyncApiData<Group>($"{GloabalValues.ApiBaseUrl}group", item).Post().IdGroup : item.IdGroup;
+                        item.IdGroup = item.IdGroup == 0 ? new SyncApiData<Group>($"group", item).Post().IdGroup : item.IdGroup;
                     }
 
                     foreach (var item in DisciplineGroupTeacherInExcel)
@@ -347,8 +365,8 @@ namespace SandS.ViewModel
                     {
                         foreach (var item in disciplinegroupteachers)
                         {
-                            //a += $"{item.DisciplineName} : {item.GroupName} : {item?.TeacherName}\n\r";
-                            _ = new SyncApiData<DisciplineGroupTeacher>($"{GloabalValues.ApiBaseUrl}dgt", item).Post();
+                            a += $"{item.DisciplineName} : {item.GroupName} : {item?.TeacherName}\n\r";
+                            _ = new SyncApiData<DisciplineGroupTeacher>($"dgt", item).Post();
                         }
                     }
                     else if (disciplinegroupteachers?.Count == 0 || disciplinegroupteachers == null && DisciplineGroupTeachersInDb.Count != 0)
@@ -361,7 +379,7 @@ namespace SandS.ViewModel
                         foreach (var item in disciplinegroupteachers)
                         {
                             a += $"{item.DisciplineName} : {item.GroupName} : {item.TeacherName}\n\r";
-                            _ = new SyncApiData<DisciplineGroupTeacher>($"{GloabalValues.ApiBaseUrl}dgt", item).Post();
+                            var dgtitem = new SyncApiData<DisciplineGroupTeacher>($"dgt", item).Post();
                         }
                     }
 
@@ -374,7 +392,7 @@ namespace SandS.ViewModel
                     {
                         d += $"{item.DisciplineGroupTeacher.GroupName} : {item.DisciplineGroupTeacher.DisciplineName} : {item.WeekDayName}\r\n";
                     }
-                    disciplinegroupteachers = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"{GloabalValues.ApiBaseUrl}dgt").Get();
+                    disciplinegroupteachers = new SyncApiData<ObservableCollection<DisciplineGroupTeacher>>($"dgt").Get();
                     foreach (var item in disciplinegroupteachers)
                     {
                         a += $"{item.Discipline.Name} : {item.Group.Name} : {item.Teacher.Name}\n\r";
@@ -396,7 +414,7 @@ namespace SandS.ViewModel
                     {
                         var c = new TTable { IdLesson = item.IdLesson, IdWeekDay = item.IdWeekDay, IdOffice = item.IdOffice, IdDisciplineGroupTeacher = item.IdDisciplineGroupTeacher };
 
-                        await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable", c);
+                        client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable?api_token={GloabalValues.ApiToken}", c);
                     }
                 }
                 return true;
