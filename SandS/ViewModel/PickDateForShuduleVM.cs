@@ -3,11 +3,7 @@ using SandS.Model;
 using SandS.Services;
 using SandS.View;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SandS.ViewModel
 {
@@ -75,7 +71,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    if(SelectedGroup != null)
+                    if (SelectedGroup != null)
                     {
                         ShowButtonisEnable = true;
                     }

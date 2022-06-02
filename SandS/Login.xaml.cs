@@ -1,10 +1,6 @@
-﻿using System.Configuration;
-using System.ServiceProcess;
-using System.Windows;
-using SandS.Model;
-using SandS.Resource;
-using SandS.Services;
+﻿using SandS.Resource;
 using SandS.View;
+using System.Windows;
 
 namespace SandS
 {
@@ -30,13 +26,14 @@ namespace SandS
         private void LoginDispatcherButton_Click(object sender, RoutedEventArgs e)
         {
             //TokenValidation? aunth_api = new SyncApiData<TokenValidation?>($"tokenvalid?api_token={ApiTokenTextbox.Text}").Get();
-            if(ApiTokenTextbox.Text == GloabalValues.ApiToken) {
+            if (ApiTokenTextbox.Text == GloabalValues.ApiToken)
+            {
                 Visibility = Visibility.Hidden;
                 var dispatcher = new Dispatcher();
                 dispatcher.Show();
                 Close();
             }
-            
+
         }
 
         private void Grid_GotFocus(object sender, RoutedEventArgs e)

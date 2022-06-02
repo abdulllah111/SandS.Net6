@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net.Http;
-using System.Text.Json;
-using System.Windows;
+﻿using SandS.ViewModel;
 using System.Windows.Controls;
-using MySql.Data.MySqlClient;
-using SandS.Model;
-using SandS.Services;
-using SandS.ViewModel;
 
 namespace SandS.View
 {

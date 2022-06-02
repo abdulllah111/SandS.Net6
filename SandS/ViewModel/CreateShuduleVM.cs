@@ -3,12 +3,10 @@ using SandS.Model;
 using SandS.Resource;
 using SandS.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SandS.ViewModel
@@ -37,7 +35,7 @@ namespace SandS.ViewModel
         public string Result { get; set; }
         public CreateShuduleVM()
         {
-            
+
         }
         public DelegateCommand LoadedCommand
         {
@@ -91,8 +89,9 @@ namespace SandS.ViewModel
                     DateIsEnabled = false;
                     LessonsIsEnabled = false;
                     AddButtonIsEnabled = false;
-                    await Task.Run(ShowFreeDisciplies).ContinueWith(_ => { 
-                        Loading = false; 
+                    await Task.Run(ShowFreeDisciplies).ContinueWith(_ =>
+                    {
+                        Loading = false;
                         DisciplinesIsEnabled = true;
                         OfficesIsEnabled = true;
                         DepartmentsIsEnabled = true;
@@ -109,7 +108,7 @@ namespace SandS.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    if(SelectedDiscipline == null || SelectedOffice == null) { AddButtonIsEnabled = false; return; }
+                    if (SelectedDiscipline == null || SelectedOffice == null) { AddButtonIsEnabled = false; return; }
                     AddButtonIsEnabled = true;
                 });
             }
@@ -122,8 +121,8 @@ namespace SandS.ViewModel
                 {
                     ObservableCollection<SubTTable> allSubTTable = SyncGetApiData.GetSubTTable();
                     string date = SelectedDate.DateStr();
-                    bool a = allSubTTable.Any(x => x.GetDisciplineGroupTeacher.IdGroup == SelectedDiscipline.GetDisciplineGroupTeacher.IdGroup && x.Date == date);
-                    if(a) { Result = "Замена существует"; return; }
+                    bool a = !allSubTTable.Any(x => x.GetDisciplineGroupTeacher.IdGroup == SelectedDiscipline!.GetDisciplineGroupTeacher!.IdGroup && x.Date == date);
+                    if (a) { Result = "Замена существует"; return; }
                     Loading = true;
                     DisciplinesIsEnabled = false;
                     OfficesIsEnabled = false;
@@ -132,7 +131,8 @@ namespace SandS.ViewModel
                     DateIsEnabled = false;
                     LessonsIsEnabled = false;
                     AddButtonIsEnabled = false;
-                    await Task.Run(AddSubTTable).ContinueWith(_ => {
+                    await Task.Run(AddSubTTable).ContinueWith(_ =>
+                    {
                         Loading = false;
                         DisciplinesIsEnabled = true;
                         OfficesIsEnabled = true;
@@ -221,7 +221,7 @@ namespace SandS.ViewModel
             AvailableOffices = AvailableOffices.GroupBy(x => x.IdOffice).Select(x => x.First()).ToList();
             AvailableDisciplinesForGroup = AvailableDisciplinesForGroup
                 .GroupBy(x => x.GetDisciplineGroupTeacher.IdDiscipline).Select(x => x.First()).ToList();
-            
+
             Disciplines = new ObservableCollection<TTable>(AvailableDisciplinesForGroup.ToList());
             Offices = new ObservableCollection<Office>(AvailableOffices);
             return true;
@@ -232,7 +232,7 @@ namespace SandS.ViewModel
             {
                 var client = new HttpClient();
                 var c = new SubTTable { IdLesson = SelectedLesson.IdLesson, IdWeekDay = (int)SelectedDate.DayOfWeek, IdOffice = SelectedOffice.IdOffice, IdDisciplineGroupTeacher = SelectedDiscipline.IdDisciplineGroupTeacher, Date = SelectedDate.DateStr() };
-                await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}subttable", c);
+                var result = await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}subttable?api_token={GloabalValues.ApiToken}", c);
                 return true;
             }
             catch (Exception)

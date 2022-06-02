@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SandS.Services;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
-using SandS.Resource;
-using SandS.Services;
 
 namespace SandS.Model
 {
@@ -18,11 +10,11 @@ namespace SandS.Model
 
         public static TaskCompletion<ObservableCollection<TTable>> GetTtableByGroupAndWeekDay(int groupid, int weekday) =>
             ApiData<ObservableCollection<TTable>>.Get($"ttable/getforgroup/{groupid}/{weekday}");
-        
+
         public static TaskCompletion<ObservableCollection<Group>> GroupsByDepartment(int DepartmentId) =>
             ApiData<ObservableCollection<Group>>.Get($"department/{DepartmentId}/groups");
 
-        public static TaskCompletion<Teacher> GetTeacher(int? id) => 
+        public static TaskCompletion<Teacher> GetTeacher(int? id) =>
             ApiData<Teacher>.Get($"teacher/{id}");
 
         public static TaskCompletion<Teacher> GetTeacher(string name) =>
@@ -43,7 +35,7 @@ namespace SandS.Model
         public static TaskCompletion<Group> GetGroup(int id) =>
             ApiData<Group>.Get($"group/{id}");
 
-        public static TaskCompletion<ObservableCollection<Group>> GetGroups() => 
+        public static TaskCompletion<ObservableCollection<Group>> GetGroups() =>
             ApiData<ObservableCollection<Group>>.Get($"group");
 
         public static TaskCompletion<Group> GetGroup(string name) =>

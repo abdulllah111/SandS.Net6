@@ -1,16 +1,7 @@
 ﻿using DevExpress.Mvvm;
-using MaterialDesignThemes.Wpf;
-using MaterialDesignThemes.Wpf.Transitions;
 using SandS.Model;
 using SandS.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 
 namespace SandS.ViewModel
 {
@@ -20,7 +11,7 @@ namespace SandS.ViewModel
         public TaskCompletion<ObservableCollection<TTable>> MondayList { get; set; }
         public TaskCompletion<ObservableCollection<TTable>> SaturdayList { get; set; }
         public TaskCompletion<ObservableCollection<TTable>> ThursdayList { get; set; }
-        public TaskCompletion< ObservableCollection<TTable>> TuesdayList { get; set; }
+        public TaskCompletion<ObservableCollection<TTable>> TuesdayList { get; set; }
         public TaskCompletion<ObservableCollection<TTable>> WednesdayList { get; set; }
         private Group SelectedGroup;
         public ShowTTableVM(Group selectedGroup)
@@ -31,17 +22,17 @@ namespace SandS.ViewModel
         {
             get
             {
-                return new DelegateCommand(()=>
+                return new DelegateCommand(() =>
                 {
                     if (SelectedGroup != null)
                     {
                         MondayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 1);
                         TuesdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 2);
                         WednesdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 3);
-                        ThursdayList =AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 4);
+                        ThursdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 4);
                         FridayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 5);
                         SaturdayList = AsyncGetApiData.GetTtableByGroupAndWeekDay(SelectedGroup.IdGroup, 6);
-                     
+
                     }
                 });
             }

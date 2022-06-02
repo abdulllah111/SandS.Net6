@@ -1,13 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
+﻿using SandS.ViewModel;
 using System.Windows.Controls;
-using System.Windows.Input;
-using MySql.Data.MySqlClient;
-using SandS.Model;
-using SandS.Services;
-using SandS.ViewModel;
 
 namespace SandS.View
 {
@@ -18,7 +10,7 @@ namespace SandS.View
     {
         public PickGroupForSchedule()
         {
-            InitializeComponent();  
+            InitializeComponent();
             DataContext = new PickGroupForScheduleVM();
         }
     }

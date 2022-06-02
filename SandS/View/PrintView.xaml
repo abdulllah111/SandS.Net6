@@ -1,0 +1,139 @@
+﻿<UserControl
+    x:Class="SandS.View.PrintView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:local="clr-namespace:SandS.View"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:SandS.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:PrintViewVM}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand
+            Command="{Binding LoadedCommand}"
+            EventName="Loaded"
+            ProcessEventsFromDisabledEventOwner="False" />
+    </dxmvvm:Interaction.Behaviors>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+
+        <ListBox
+            x:Name="SelectedPrintType"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="49"
+            Margin="10.2,9.6,9.4,255"
+            VerticalAlignment="Center"
+            ItemsSource="{Binding PrintTypes}"
+            SelectedItem="{Binding SelectedPrintType}"
+            Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand
+                    Command="{Binding PrintTypeSelectedChangedCommand}"
+                    EventName="SelectionChanged"
+                    ProcessEventsFromDisabledEventOwner="False" />
+            </dxmvvm:Interaction.Behaviors>
+        </ListBox>
+        <ComboBox
+            x:Name="DepartmenBoxForPrint"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="49"
+            Margin="10.2,63.6,9.4,201"
+            VerticalAlignment="Center"
+            materialDesign:HintAssist.Hint="Отделение"
+            DisplayMemberPath="Name"
+            IsEnabled="{Binding DepartmentsIsEnabled}"
+            ItemsSource="{Binding Departments.Result}"
+            SelectedItem="{Binding SelectedDepartment}"
+            SelectedValuePath="IdDepartment"
+            Style="{StaticResource MaterialDesignOutlinedComboBox}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand
+                    Command="{Binding DepartmentsSelectedChangedCommand}"
+                    EventName="SelectionChanged"
+                    ProcessEventsFromDisabledEventOwner="False" />
+            </dxmvvm:Interaction.Behaviors>
+        </ComboBox>
+        <ComboBox
+            x:Name="GroupComboboxForPrint"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="49"
+            Margin="10.2,129.6,9.4,135"
+            VerticalAlignment="Center"
+            materialDesign:HintAssist.Hint="Группа"
+            materialDesign:TextFieldAssist.HasClearButton="True"
+            DisplayMemberPath="Name"
+            IsEnabled="{Binding GroupsIsEnabled}"
+            ItemsSource="{Binding Groups.Result}"
+            SelectedItem="{Binding SelectedGroup}"
+            SelectedValuePath="IdGroup"
+            Style="{StaticResource MaterialDesignOutlinedComboBox}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand
+                    Command="{Binding GroupsSelectedChangedCommand}"
+                    EventName="SelectionChanged"
+                    ProcessEventsFromDisabledEventOwner="False" />
+            </dxmvvm:Interaction.Behaviors>
+        </ComboBox>
+        <DatePicker
+            x:Name="DateBoxForPrint"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="49"
+            Margin="10.2,191.6,9.4,73"
+            VerticalAlignment="Center"
+            materialDesign:HintAssist.Hint="Дата"
+            FirstDayOfWeek="Monday"
+            IsEnabled="{Binding DateIsEnabled}"
+            IsTodayHighlighted="True"
+            SelectedDate="{Binding SelectedDate}"
+            Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+
+        <Button
+            x:Name="PrintButton"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="49"
+            Margin="11.2,254.6,9.4,10"
+            VerticalAlignment="Center"
+            Command="{Binding PrintButtonCommand}"
+            Content="Распечатать"
+            IsEnabled="{Binding PrintBtnIsEnabled}" />
+        <ProgressBar
+            Width="50"
+            Height="49"
+            Margin="339,191,339,193"
+            HorizontalAlignment="Stretch"
+            IsIndeterminate="True"
+            RenderTransformOrigin="0.5,0.5"
+            Style="{StaticResource MaterialDesignCircularProgressBar}"
+            Visibility="{Binding Loading, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Value="0">
+            <ProgressBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1" />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
+                </TransformGroup>
+            </ProgressBar.RenderTransform>
+        </ProgressBar>
+    </Grid>
+</UserControl>

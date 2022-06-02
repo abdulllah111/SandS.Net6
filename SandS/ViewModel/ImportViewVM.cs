@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SandS.ViewModel
@@ -147,12 +146,14 @@ namespace SandS.ViewModel
                                         });
                                     teacher = worksheet.Row(j + 1).Cell(i).GetString();
                                     //Создание листа учителя
-                                    if (teacher != "")
+                                    if (!String.IsNullOrWhiteSpace(teacher))
                                         TeachersInExcel.Add(new Teacher
                                         {
-                                            Name = teacher.DeleteErrors()
+                                            Name = teacher.DeleteErrors(),
+                                            Login = teacher.Translate(),
+                                            Password = RandomPass.CreatePassword(6)
                                         });
-                                    else if (teacher == "")
+                                    else if (String.IsNullOrWhiteSpace(teacher))
                                     {
                                         TeachersInExcel.Add(new Teacher
                                         {
@@ -207,7 +208,7 @@ namespace SandS.ViewModel
                                 }
                                 //Создание экземпляра клсса Предмет группа преподаватель
 
-                                if (discipline != "" && teacher != "" && group != "")
+                                if (discipline != "" && !String.IsNullOrWhiteSpace(teacher) && group != "")
                                 {
                                     disciplineGroupTeacher = new DisciplineGroupTeacher
                                     {
@@ -221,7 +222,7 @@ namespace SandS.ViewModel
                                 {
                                     disciplineGroupTeacher = new DisciplineGroupTeacher
                                     {
-                                        TeacherName = teacher.DeleteErrors(),
+                                        TeacherName = "Запас",
                                         DisciplineName = discipline.DeleteErrors(),
                                         GroupName = group.DeleteErrors()
                                     };
@@ -289,33 +290,33 @@ namespace SandS.ViewModel
                     GroupsInExcel = new ObservableCollection<Group>(GroupsInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
                     if (GroupsInDb.Count != 0)
                         groups = new ObservableCollection<Group>(GroupsInExcel.Where(x => !GroupsInDb.Any(x2 => x2.Name == x.Name)));
-                    if (groups.Count == 0 || groups == null && GroupsInDb.Count != 0)
+                    if ((groups == null || groups.Count == 0) && GroupsInDb.Count != 0)
                         groups = GroupsInDb;
-                    else if (groups.Count == 0 || groups == null && GroupsInDb.Count == 0)
+                    else if ((groups == null || groups.Count == 0) && GroupsInDb.Count == 0)
                         groups = GroupsInExcel;
                     ;
                     TeachersInExcel = new ObservableCollection<Teacher>(TeachersInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
                     if (TeachersInDb.Count != 0)
                         teachers = new ObservableCollection<Teacher>(TeachersInExcel.Where(x => !TeachersInDb.Any(x2 => x2.Name == x.Name)));
-                    if (teachers.Count == 0 || teachers == null && TeachersInDb.Count != 0)
+                    if ((teachers == null || teachers.Count == 0) && TeachersInDb.Count != 0)
                         teachers = TeachersInDb;
-                    else if (teachers.Count == 0 || teachers == null && TeachersInDb.Count == 0)
+                    else if ((teachers == null || teachers.Count == 0) && TeachersInDb.Count == 0)
                         teachers = TeachersInExcel;
                     ;
                     DisciplinesInExcel = new ObservableCollection<Discipline>(DisciplinesInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
                     if (DisciplinesInDb.Count != 0)
                         disciplines = new ObservableCollection<Discipline>(DisciplinesInExcel.Where(x => !DisciplinesInDb.Any(x2 => x2.Name == x.Name)));
-                    if (disciplines.Count == 0 || disciplines == null && DisciplinesInDb.Count != 0)
+                    if ((disciplines == null || disciplines.Count == 0) && DisciplinesInDb.Count != 0)
                         disciplines = DisciplinesInDb;
-                    else if (disciplines.Count == 0 || disciplines == null && DisciplinesInDb.Count == 0)
+                    else if ((disciplines == null || disciplines.Count == 0) && DisciplinesInDb.Count == 0)
                         disciplines = DisciplinesInExcel;
                     ;
                     DepartmentsInExcel = new ObservableCollection<Department>(DepartmentsInExcel.GroupBy(x => x.Name).Select(x => x.First()).ToList());
                     if (DepartmentsInDb.Count != 0)
                         departments = new ObservableCollection<Department>(DepartmentsInExcel.Where(x => !DepartmentsInDb.Any(x2 => x2.Name == x.Name)));
-                    if (departments.Count == 0 || departments == null && DepartmentInDb.Count != 0)
+                    if ((departments == null || departments.Count == 0) && DepartmentInDb.Count != 0)
                         departments = DepartmentsInDb;
-                    else if (departments.Count == 0 || departments == null && DepartmentInDb.Count == 0)
+                    else if ((departments == null || departments.Count == 0) && DepartmentInDb.Count == 0)
                         departments = DepartmentsInExcel;
 
 
@@ -325,9 +326,10 @@ namespace SandS.ViewModel
                     var t = "";
                     foreach (var item in DisciplineGroupTeacherInExcel)
                         t += $"{item.DisciplineName} : {item.GroupName} : {item.TeacherName}\r\n";
-
+                    t = "";
                     foreach (var item in teachers)
                     {
+                        t += item.Name;
                         item.IdTeacher = item.IdTeacher == 0 ? new SyncApiData<Teacher>($"teacher", item).Post().IdTeacher : item.IdTeacher;
                     }
                     foreach (var item in disciplines)
@@ -404,9 +406,12 @@ namespace SandS.ViewModel
                         item.IdWeekDay = WeekDaysInDb.Where(x => x.Name == item.WeekDayName).First().IdWeekDay;
                         item.IdLesson = LessonIdDb.Where(x => x.LessonNumber == item.LessonName).First().IdLesson;
                         item.IdOffice = item.OfficeName != "" ? offices.Where(x => x.OfficeNumber == item.OfficeName).First().IdOffice : 0;
-                        item.IdDisciplineGroupTeacher = disciplinegroupteachers.Where(x =>
-                                item.DisciplineGroupTeacher.GroupName == x.Group.Name && item.DisciplineGroupTeacher.DisciplineName == x.Discipline.Name).First().IdDisciplineGroupTeacher;
-
+                        item.IdDisciplineGroupTeacher = disciplinegroupteachers.First(x =>
+                                item.DisciplineGroupTeacher.GroupName == x.Group.Name && item.DisciplineGroupTeacher.DisciplineName == x.Discipline.Name).IdDisciplineGroupTeacher;
+                        if (item.DisciplineGroupTeacher.GroupName == "18П-4")
+                        {
+                            b += $"{item.WeekDayName}  :  {item.LessonName} : {item.DisciplineGroupTeacher.DisciplineName} \r\n";
+                        }
                     }
                     var tables = TTablesInExcel;
                     var client = new HttpClient();
@@ -414,7 +419,7 @@ namespace SandS.ViewModel
                     {
                         var c = new TTable { IdLesson = item.IdLesson, IdWeekDay = item.IdWeekDay, IdOffice = item.IdOffice, IdDisciplineGroupTeacher = item.IdDisciplineGroupTeacher };
 
-                        client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable?api_token={GloabalValues.ApiToken}", c);
+                        await client.PostAsJsonAsync($"{GloabalValues.ApiBaseUrl}ttable?api_token={GloabalValues.ApiToken}", c);
                     }
                 }
                 return true;

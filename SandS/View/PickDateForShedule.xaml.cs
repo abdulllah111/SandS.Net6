@@ -1,10 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using SandS.ViewModel;
 using System.Windows.Controls;
-using MySql.Data.MySqlClient;
-using SandS.Model;
-using SandS.ViewModel;
 
 namespace SandS.View
 {

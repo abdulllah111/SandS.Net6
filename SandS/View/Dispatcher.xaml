@@ -84,74 +84,15 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="2*" />
-                        <RowDefinition Height="9*" />
-                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="51*" />
+                        <RowDefinition Height="433*" />
                     </Grid.RowDefinitions>
-                    <ListBox
-                        x:Name="SelectedPrintType"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,9.6,9.4,255"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}">
-                        <ListBoxItem x:Name="TTableSelect" Content="Расписание" />
-                        <ListBoxItem x:Name="SubTTableSelect" Content="Замены" />
-                    </ListBox>
-                    <ComboBox
-                        x:Name="DepartmenBoxForPrint"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,63.6,9.4,201"
-                        VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="Отделение"
-                        DisplayMemberPath="Name"
-                        IsEnabled="False"
-                        SelectedValuePath="IdDepartment"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <ComboBox
-                        x:Name="GroupComboboxForPrint"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,129.6,9.4,135"
-                        VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="Группа"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        DisplayMemberPath="Name"
-                        IsEnabled="False"
-                        SelectedValuePath="IdGroup"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <DatePicker
-                        x:Name="DateBoxForPrint"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="10.2,191.6,9.4,73"
-                        VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="Дата"
-                        FirstDayOfWeek="Monday"
-                        IsEnabled="False"
-                        IsTodayHighlighted="True"
-                        Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
-
-                    <Button
-                        x:Name="PrintButton"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Height="49"
-                        Margin="11.2,254.6,9.4,10"
-                        VerticalAlignment="Center"
-                        Content="Распечатать"
-                        IsEnabled="False" />
+                    <View:PrintView
+                        x:Name="PrintViewPanel"
+                        Grid.RowSpan="2"
+                        Width="Auto"
+                        Height="Auto" />
                 </Grid>
             </TabItem>
         </TabControl>
